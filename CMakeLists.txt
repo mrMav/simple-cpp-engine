@@ -9,9 +9,11 @@ add_executable(${PROJECT_NAME}
 
 #specifies that we also have work to do on this directory
 add_subdirectory(external/glfw)
+add_subdirectory(external/glm)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC external/glfw/include
+    PUBLIC external/glm
     PUBLIC external
 )
 
