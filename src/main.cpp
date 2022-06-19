@@ -3,6 +3,9 @@
 #include <glfw/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <vector>
+
+#include "engine/engine.h"
 
 int main()
 {
@@ -26,19 +29,20 @@ int main()
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+    {        
+        std::cout << "Failed to initialize GLAD!" << std::endl;
         exit(EXIT_FAILURE);
     }
-
     
     // ok, let's see how much I can do from memory
 
-    float vertices[] = {
-         0.0f,  0.9f, 0.0f,
-        -0.9f, -0.9f, 0.0f,
-         0.9f, -0.9f, 0.0f
+    std::vector<VertexPositionNormalTexture> vertexData =
+    {
+        VertexPositionNormalTexture{ 0.0f,  0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f},
+        VertexPositionNormalTexture{ 0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f},
+        VertexPositionNormalTexture{-0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}
     };
+    
 
     const char *vertexShaderSource = "#version 460 core\n"
         "layout (location = 0) in vec3 aPos;\n"
@@ -70,16 +74,16 @@ int main()
         std::cout << "Error compiling vertex shader\n" << infoLog << std::endl;
     }
 
-    GLuint fragementShader;
-    fragementShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragementShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragementShader);
+    GLuint fragmentShader;
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
+    glCompileShader(fragmentShader);
 
-    glGetShaderiv(fragementShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
     if(!success)
     {
-        glGetShaderInfoLog(fragementShader, 512, nullptr, infoLog);
+        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
         std::cout << "Error compiling fragment shader\n" << infoLog << std::endl;
     }
 
@@ -87,7 +91,7 @@ int main()
     shaderProgram = glCreateProgram();
 
     glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragementShader);
+    glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
 
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
@@ -100,18 +104,16 @@ int main()
     glUseProgram(shaderProgram);
 
     glDeleteShader(vertexShader);
-    glDeleteShader(fragementShader);
+    glDeleteShader(fragmentShader);
 
     GLuint vbo, vao;
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    VertexBuffer* vb = new VertexBuffer(vertexData);
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0);
     glEnableVertexAttribArray(0);
     
     float time;
@@ -141,9 +143,12 @@ int main()
         glfwPollEvents();
     }
 
-    glfwDestroyWindow(window);
+    vb->Delete();
+    delete vb;
 
+    glfwDestroyWindow(window);
     glfwTerminate();
+
     exit(EXIT_SUCCESS);
 
     return 0;

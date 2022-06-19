@@ -1,13 +1,16 @@
 cmake_minimum_required(VERSION 3.23.2)
 
+set (CMAKE_CXX_STANDARD 11)
+
 project(new-game)
 
-add_executable(${PROJECT_NAME}    
-    src/glad.c
-    src/main.cpp
-)
+add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCE})
 
 #specifies that we also have work to do on this directory
+add_subdirectory(src)
+add_subdirectory(src/engine)
+add_subdirectory(src/engine/OpenGL)
+
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
 
