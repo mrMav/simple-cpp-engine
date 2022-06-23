@@ -7,28 +7,47 @@
 
 #include "VertexPositionNormalTexture.h"
 
+
 class VertexBuffer
 {
 	public:
 
-		VertexBuffer(const std::vector<VertexPositionNormalTexture>& data);  // later we can add support for other vertex types
-		~VertexBuffer();
+		VertexBuffer(const void* data, const size_t dataSize)
+			: m_Data(data), m_DataSize(dataSize)
+		{
+			glGenBuffers(1, &m_Handle);
+			Bind();
+			SetData(m_Data, m_DataSize);
 
-		void Bind();
+		}
+		~VertexBuffer(){};
 
-		void Unbind();
+		void Bind() const
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, m_Handle);
+		}
 
-		void Delete();
+		void Unbind() const
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+
+		void SetData(const void* data, const size_t size) const
+		{
+			glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+		}
+
+		void Delete()
+		{
+			glDeleteBuffers(1, &m_Handle);	
+		}
 
 private:
 
-	GLuint m_vbo;
+	GLuint m_Handle;
 
-	// will hold the data
-	// we will decompose the received data to an interleaved array
-	float* m_data;
+	const void* m_Data;
 
-	uint32_t m_dataCount;
+	size_t m_DataSize;
 
 };
-

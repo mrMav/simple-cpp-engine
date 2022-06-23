@@ -10,8 +10,8 @@ set(HEADERS
 
 set(SOURCE
     ${SOURCE}
-    VertexBuffer.cpp
-    IndexBuffer.cpp 
+    #VertexBuffer.cpp
+    #IndexBuffer.cpp 
 )
 
 target_sources(${PROJECT_NAME} 

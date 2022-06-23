@@ -23,3 +23,5 @@ target_include_directories(${PROJECT_NAME}
 target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 
 target_link_libraries(${PROJECT_NAME} glfw)
+
+file(COPY src/engine/Shaders DESTINATION .)

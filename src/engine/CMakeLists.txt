@@ -2,14 +2,14 @@
 set(HEADERS
     ${HEADERS}
     game.h
-    spritebatch.h
+    Spritebatch.h
     engine.h
 )
 
 set(SOURCE
     ${SOURCE}
     game.cpp
-    spritebatch.cpp
+    Spritebatch.cpp
 )
 
 target_sources(${PROJECT_NAME} 

@@ -1,13 +1,16 @@
 
+using "OpenGL/VertexBuffer.h"
 
 class Spritebatch
 {
 
-    public:
+public:
 
         
 
-    private:  
+private:
+
+    VertexBuffer m_VertexBuffer;
 
 
 }
