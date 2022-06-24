@@ -88,20 +88,9 @@ int main()
     };
     
     Shader shader("Shaders/vertex.vert", "Shaders/fragment.frag");
-
-    GLuint vbo, vao, ebo;
-
-    // glGenVertexArrays(1, &vao);
-    // glBindVertexArray(vao);
     
     VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionNormalTexture));
     VertexArray va(&VertexPositionColor::Attributes);
-
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexPositionNormalTexture::GetStride(), (void*)0);
-    // glEnableVertexAttribArray(0);
-
-    VertexPositionTexture::Attributes.PrintAttribs();
-
     IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
 
     float time;
@@ -122,8 +111,6 @@ int main()
         shader.setVec3("uColor", color);
         shader.setFloat("uTime", time);
 
-        //glBindVertexArray(vao);
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         
