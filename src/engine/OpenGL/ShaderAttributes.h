@@ -89,9 +89,10 @@ namespace Engine
     };
 
     struct VertexPositionTexture
-    {
-        static ShaderAttributes Attributes;
-        
+    {        
+        // init in ShaderAttributes.cpp
+        const static ShaderAttributes Attributes;
+
         glm::vec3 Position;
         glm::vec2 Texture;
 
@@ -100,19 +101,12 @@ namespace Engine
         {
             
         }
-
     };
-
-    ShaderAttributes VertexPositionTexture::Attributes = ShaderAttributes(
-        {
-            { AttributeType::Float3, sizeof(Position) },
-            { AttributeType::Float2, sizeof(Texture)  }
-        }
-    );
 
     struct VertexPositionColor
     {
-        static ShaderAttributes Attributes;
+        // init in ShaderAttributes.cpp
+        const static ShaderAttributes Attributes;
         
         glm::vec3 Position;
         glm::vec3 Color;
@@ -122,14 +116,6 @@ namespace Engine
         {
             
         }
-
     };
-
-    ShaderAttributes VertexPositionColor::Attributes = ShaderAttributes(
-        {
-            { AttributeType::Float3, sizeof(Position) },
-            { AttributeType::Float3, sizeof(Color)  }
-        }
-    );
     
 }

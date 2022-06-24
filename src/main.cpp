@@ -97,7 +97,6 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexPositionNormalTexture::GetStride(), (void*)0);
     glEnableVertexAttribArray(0);
 
-    //Engine::VertexPositionTexture::SetAttributes();
     Engine::VertexPositionTexture::Attributes.PrintAttribs();
 
 /*

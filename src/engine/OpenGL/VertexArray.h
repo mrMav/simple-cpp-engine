@@ -20,8 +20,6 @@ namespace Engine
             glGenVertexArrays(1, &m_Handle);
             Bind();
 
-            
-
         }
 
         ~VertexArray() {}

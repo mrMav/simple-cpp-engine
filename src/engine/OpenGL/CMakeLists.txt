@@ -12,6 +12,7 @@ set(HEADERS
 
 set(SOURCE
     ${SOURCE}
+    ShaderAttributes.cpp
 )
 
 target_sources(${PROJECT_NAME} 
