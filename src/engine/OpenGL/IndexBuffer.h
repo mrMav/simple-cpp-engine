@@ -5,14 +5,12 @@
 
 #include <vector>
 
-// class for element buffer abstrtaction
 class IndexBuffer
 {
 
-
 public:
 
-	IndexBuffer(const void* data, const size_t count)
+	IndexBuffer(const void* data, const size_t count) 
 		:	m_Data(data), m_DataCount(count)
 	{
 		// class constructor

@@ -3,3 +3,4 @@
 #include "OpenGL/IndexBuffer.h"
 #include "OpenGL/Shader.h"
 #include "OpenGL/GLUtils.h"
+#include "OpenGL/ShaderAttributes.h"

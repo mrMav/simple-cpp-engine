@@ -1,17 +1,17 @@
 
 set(HEADERS
     ${HEADERS}
+    VertexArray.h
     VertexBuffer.h
     IndexBuffer.h
     VertexPositionNormalTexture.h
+    ShaderAttributes.h
     GLUtils.h
     Shader.h
 )
 
 set(SOURCE
     ${SOURCE}
-    #VertexBuffer.cpp
-    #IndexBuffer.cpp 
 )
 
 target_sources(${PROJECT_NAME} 

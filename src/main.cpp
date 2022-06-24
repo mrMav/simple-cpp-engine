@@ -94,8 +94,112 @@ int main()
     
     VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionNormalTexture));
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)0);
-    glEnableVertexAttribArray(0);  
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexPositionNormalTexture::GetStride(), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    //Engine::VertexPositionTexture::SetAttributes();
+    Engine::VertexPositionTexture::Attributes.PrintAttribs();
+
+/*
+
+    VertexArray.SetAttributes(attrib::GetAttributes());
+
+    // in vertexArray:
+
+    int m_AttribIndex;
+
+    foreach attrib in Attributes:
+
+        switch(attrib.Type)
+        {
+            case AttributeType::Float3:
+            {
+                glVertexAttribPointer(m_AttribIndex, attrib.GetCount(), GL_FALSE, m_Attributes::GetStride(), );
+                glEnableVertexAttribArray(m_AttribIndex);
+                m_AttribIndex++;
+            }
+        }
+
+
+VAO defines the attributes.
+So, VAO needs something to tell it how it must define the attribues.
+
+I define a structure like this:
+
+VertexPositionTexture
+It should implement an interface or an abstract class of type ShaderAttributes
+
+Then the VAO could have a property like this:
+ShaderAttributes m_Attributes;
+
+And it is then possible to implement how many types of ShaderAttributes like VertexPositionTexture
+
+class ShaderAttrib
+{
+    AttributeType Type;
+    int Size;
+    int Offset = 0;
+}
+
+class ShaderAttributes
+{   
+    std::vector<ShaderAttrib> m_Attributes;
+
+    int m_Stride = 0;
+
+    void CalculateOffsetsAndStride()
+    {
+        size_t offset = 0;
+        m_Stride = 0;
+        foreach attrib in m_Attributes
+        {
+            attrib.Offset = offset;
+            offset += attrib.Size;
+            m_Stride += attrib.Size;
+        }
+    }
+
+    int GetStride()
+    {
+        return m_Stride;
+    }
+}
+
+class VertexPositionTexture : public ShaderAttributes
+{
+    glm::vec3 Position;
+    glm::vec2 Texture;
+
+    VertexPositionTexture(glm::vec3 pos, glm::vec2 tex)
+        : Position(pos), Texture(tex)
+    {
+        m_Attributes.push_back({AttributeType::Float3, sizeof(glm::vec3), 0});
+        m_Attributes.push_back({AttributeType::Float2, sizeof(glm::vec2), 0});
+        
+        CalculateOffsetsAndStride();
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
 
     IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
 
