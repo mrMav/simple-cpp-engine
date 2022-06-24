@@ -10,20 +10,43 @@
 
 namespace Engine
 {
-    
     // thanks cherno
     enum class AttributeType
     {
         None = 0, Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
     };
 
+    GLenum ShaderDataTypeToOpenGLBaseType(const AttributeType type);
+
     struct ShaderAttrib
     {
         AttributeType Type;
         size_t Size;
         size_t Offset = 0;
+        bool Normalized = false;
 
-        const std::string String()
+        uint32_t GetComponentCount() const
+		{
+            // thanks again cherno
+			switch (Type)
+			{
+				case AttributeType::Float:   return 1;
+				case AttributeType::Float2:  return 2;
+				case AttributeType::Float3:  return 3;
+				case AttributeType::Float4:  return 4;
+				case AttributeType::Mat3:    return 3; // 3* float3
+				case AttributeType::Mat4:    return 4; // 4* float4
+				case AttributeType::Int:     return 1;
+				case AttributeType::Int2:    return 2;
+				case AttributeType::Int3:    return 3;
+				case AttributeType::Int4:    return 4;
+				case AttributeType::Bool:    return 1;
+			}
+
+			return 0;
+		}
+
+        const std::string String() const
         {
             using namespace std;
 
@@ -52,16 +75,16 @@ namespace Engine
             CalculateOffsetsAndStride();
         }
 
-        const std::vector<ShaderAttrib>* const GetAttributes() const
+        const std::vector<ShaderAttrib>& GetAttributes() const
         {
-            return &m_Attributes;
+            return m_Attributes;
         }
 
         void CalculateOffsetsAndStride()
         {
             size_t offset = 0;
             m_Stride = 0;
-            for(ShaderAttrib &attrib : m_Attributes)
+            for(auto &attrib : m_Attributes)
             {
                 attrib.Offset = offset; 
                 offset += attrib.Size;
@@ -76,7 +99,7 @@ namespace Engine
 
         void PrintAttribs() const
         {
-            for(ShaderAttrib attrib : m_Attributes)
+            for(auto const &attrib : m_Attributes)
                 std::cout << attrib.String() << std::endl;
         }
     

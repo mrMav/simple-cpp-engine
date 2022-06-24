@@ -15,11 +15,12 @@ namespace Engine
     {
 
     public:
-        VertexArray()
+        VertexArray(const ShaderAttributes* attribs)
+            : m_Attributes(attribs)
         {
             glGenVertexArrays(1, &m_Handle);
             Bind();
-
+            SetAttributes();
         }
 
         ~VertexArray() {}
@@ -36,19 +37,37 @@ namespace Engine
 
         void Delete()
         {
-            glDeleteBuffers(1, &m_Handle);            
+            glDeleteBuffers(1, &m_Handle);
         }
 
-        //void SetAttributes()
-
-
     private:
-
+    
         GLuint m_Handle;
 
         uint8_t m_AttribIndex = 0;
 
-        ShaderAttributes m_Attributes;
+        const ShaderAttributes* m_Attributes;
+        
+        void SetAttributes()
+        {
+            
+            for(auto const &attrib : m_Attributes->GetAttributes())
+            {
+                switch(attrib.Type)
+                {
+                    case AttributeType::Float3:
+                    {
+                        glVertexAttribPointer(m_AttribIndex, attrib.GetComponentCount(),
+                            ShaderDataTypeToOpenGLBaseType(attrib.Type), attrib.Normalized ? GL_TRUE : GL_FALSE,
+                            m_Attributes->GetStride(), (void*)(attrib.Offset));
+                        glEnableVertexAttribArray(m_AttribIndex);
+                        m_AttribIndex++;
+                    }
+                }
+
+            }
+
+        }
 
     };
 

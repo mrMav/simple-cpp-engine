@@ -7,6 +7,8 @@
 
 #include "engine/engine.h"
 
+using namespace Engine;
+
 void GLAPIENTRY MessageCallback( GLenum source,
                  GLenum type,
                  GLuint id,
@@ -59,19 +61,19 @@ int main()
     
     // ok, let's see how much I can do from memory
 
-    std::vector<VertexPositionNormalTexture> vertexDataTriangle =
+    std::vector<VertexPositionColor> vertexDataTriangle =
     {
-        VertexPositionNormalTexture{ 0.0f,  0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f},
-        VertexPositionNormalTexture{ 0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f},
-        VertexPositionNormalTexture{-0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}
+        VertexPositionColor{glm::vec3( 0.0f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+        VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+        VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
     };
 
-    std::vector<VertexPositionNormalTexture> vertexDataSquare =
+    std::vector<VertexPositionColor> vertexDataSquare =
     {
-        VertexPositionNormalTexture{-0.9f,  0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-        VertexPositionNormalTexture{ 0.9f,  0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f},
-        VertexPositionNormalTexture{ 0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f},
-        VertexPositionNormalTexture{-0.9f, -0.9f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}
+        VertexPositionColor{glm::vec3(-0.9f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+        VertexPositionColor{glm::vec3( 0.9f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+        VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
+        VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
     };
 
     std::vector<uint16_t> triangleIndices = 
@@ -89,116 +91,16 @@ int main()
 
     GLuint vbo, vao, ebo;
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    // glGenVertexArrays(1, &vao);
+    // glBindVertexArray(vao);
     
     VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionNormalTexture));
+    VertexArray va(&VertexPositionColor::Attributes);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexPositionNormalTexture::GetStride(), (void*)0);
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VertexPositionNormalTexture::GetStride(), (void*)0);
+    // glEnableVertexAttribArray(0);
 
-    Engine::VertexPositionTexture::Attributes.PrintAttribs();
-
-/*
-
-    VertexArray.SetAttributes(attrib::GetAttributes());
-
-    // in vertexArray:
-
-    int m_AttribIndex;
-
-    foreach attrib in Attributes:
-
-        switch(attrib.Type)
-        {
-            case AttributeType::Float3:
-            {
-                glVertexAttribPointer(m_AttribIndex, attrib.GetCount(), GL_FALSE, m_Attributes::GetStride(), );
-                glEnableVertexAttribArray(m_AttribIndex);
-                m_AttribIndex++;
-            }
-        }
-
-
-VAO defines the attributes.
-So, VAO needs something to tell it how it must define the attribues.
-
-I define a structure like this:
-
-VertexPositionTexture
-It should implement an interface or an abstract class of type ShaderAttributes
-
-Then the VAO could have a property like this:
-ShaderAttributes m_Attributes;
-
-And it is then possible to implement how many types of ShaderAttributes like VertexPositionTexture
-
-class ShaderAttrib
-{
-    AttributeType Type;
-    int Size;
-    int Offset = 0;
-}
-
-class ShaderAttributes
-{   
-    std::vector<ShaderAttrib> m_Attributes;
-
-    int m_Stride = 0;
-
-    void CalculateOffsetsAndStride()
-    {
-        size_t offset = 0;
-        m_Stride = 0;
-        foreach attrib in m_Attributes
-        {
-            attrib.Offset = offset;
-            offset += attrib.Size;
-            m_Stride += attrib.Size;
-        }
-    }
-
-    int GetStride()
-    {
-        return m_Stride;
-    }
-}
-
-class VertexPositionTexture : public ShaderAttributes
-{
-    glm::vec3 Position;
-    glm::vec2 Texture;
-
-    VertexPositionTexture(glm::vec3 pos, glm::vec2 tex)
-        : Position(pos), Texture(tex)
-    {
-        m_Attributes.push_back({AttributeType::Float3, sizeof(glm::vec3), 0});
-        m_Attributes.push_back({AttributeType::Float2, sizeof(glm::vec2), 0});
-        
-        CalculateOffsetsAndStride();
-
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-*/
-
+    VertexPositionTexture::Attributes.PrintAttribs();
 
     IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
 
@@ -220,8 +122,9 @@ class VertexPositionTexture : public ShaderAttributes
         shader.setVec3("uColor", color);
         shader.setFloat("uTime", time);
 
-        glBindVertexArray(vao);
+        //glBindVertexArray(vao);
         //glDrawArrays(GL_TRIANGLES, 0, 6);
+        va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         
         glfwSwapBuffers(window);
