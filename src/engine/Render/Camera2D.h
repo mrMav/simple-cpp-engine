@@ -22,19 +22,19 @@ namespace Engine
 		void Update(float gameTime);
 
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }
-		glm::mat4 GetProjectionTransform() const { return m_ProjectionTransform; }
+		glm::mat4 GetViewProjectionTransform() const { return m_ViewProjectionTransform; }
 
 	private:
 
+		glm::vec3 m_Origin;
+
 		glm::mat4 m_ViewTransform;
 		glm::mat4 m_ProjectionTransform;
+		glm::mat4 m_ViewProjectionTransform;
 
 		const Viewport& m_Viewport;
 
-		void UpdateViewTransform()
-		{
-			m_ViewTransform = glm::translate(Position);
-		}
+		void UpdateViewTransform();
 
 	};
 

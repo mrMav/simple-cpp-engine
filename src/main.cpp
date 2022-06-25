@@ -53,9 +53,9 @@ int main()
 
     std::vector<VertexPositionColor> vertexDataTriangle =
     {
-        VertexPositionColor{glm::vec3( 0.0f,  0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3(60.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f)},
-        VertexPositionColor{glm::vec3( 0.0f, 50.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)}
+        VertexPositionColor{glm::vec3( 0.0f, 40.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3(-20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)}
     };
 
     std::vector<VertexPositionColor> vertexDataSquare =
@@ -65,6 +65,8 @@ int main()
         VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
         VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
     };
+
+    // R:231,G:60,B:0,A:255
 
     std::vector<uint16_t> triangleIndices = 
     {
@@ -103,7 +105,7 @@ int main()
         shader.setVec3("uColor", color);
         shader.setFloat("uTime", time);
         shader.setMat4("uView", camera.GetViewTransform());
-        shader.setMat4("uProjection", camera.GetProjectionTransform());
+        shader.setMat4("uProjection", camera.GetViewProjectionTransform());
 
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
