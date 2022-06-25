@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "engine/engine.h"
+#include "Engine/Engine.h"
 
 using namespace Engine;
 
@@ -89,9 +89,9 @@ int main()
     
     Shader shader("Shaders/vertex.vert", "Shaders/fragment.frag");
     
-    VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionNormalTexture));
+    VertexBuffer vb = VertexBuffer(&(vertexDataTriangle[0]), vertexDataTriangle.size() * sizeof(VertexPositionColor));
     VertexArray va(&VertexPositionColor::Attributes);
-    IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
+    IndexBuffer ib = IndexBuffer(&triangleIndices[0], triangleIndices.size());
 
     float time;
     glm::vec3 color = glm::vec3(0.85, 0.4, 0.6);

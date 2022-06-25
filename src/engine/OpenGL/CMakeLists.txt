@@ -4,7 +4,6 @@ set(HEADERS
     VertexArray.h
     VertexBuffer.h
     IndexBuffer.h
-    VertexPositionNormalTexture.h
     ShaderAttributes.h
     GLUtils.h
     Shader.h
@@ -12,6 +11,7 @@ set(HEADERS
 
 set(SOURCE
     ${SOURCE}
+    glad.c
     ShaderAttributes.cpp
 )
 

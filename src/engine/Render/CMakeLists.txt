@@ -1,11 +1,12 @@
 
 set(HEADERS
-    ${HEADERS}    
+    ${HEADERS}
+    Spritebatch.h
 )
 
 set(SOURCE
     ${SOURCE}
-    main.cpp
+    Spritebatch.cpp
 )
 
 target_sources(${PROJECT_NAME} 

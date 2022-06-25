@@ -1,15 +1,13 @@
 
 set(HEADERS
     ${HEADERS}
-    game.h
-    Spritebatch.h
-    engine.h
+    Game.h
+    Engine.h
 )
 
 set(SOURCE
     ${SOURCE}
-    game.cpp
-    Spritebatch.cpp
+    Game.cpp
 )
 
 target_sources(${PROJECT_NAME} 

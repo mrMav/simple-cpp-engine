@@ -1,4 +1,3 @@
-#include "OpenGL/VertexPositionNormalTexture.h"
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/VertexBuffer.h"
 #include "OpenGL/IndexBuffer.h"

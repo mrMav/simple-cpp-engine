@@ -4,6 +4,8 @@
 #include <glfw/glfw3.h>
 
 #include <iostream>
+#include <iomanip>
+#include <string>
 
 // static class for checking gl errors
 class GLUtils
@@ -118,14 +120,38 @@ public:
 			break;
 		}
 
-		printf("%d: %s of %s severity, raised from %s: %s\n",
-				id, _type, _severity, _source, msg);
+		std::ostringstream outputStream;
+		outputStream << id << ": " << _type << " of " << _severity << ", raised from " << _source << ":" << "\n";
+		outputStream << GLUtils::BreakString(msg, 64) << std::endl;
+
+		std::cout << outputStream.str() << std::endl;
+
+		/*printf("%d: %s of %s severity, raised from %s: %s\n",
+				id, _type, _severity, _source, msg);*/
 
 	}
+		
 
 private:
 	
 	GLUtils();  // disable the creation of an instance
+
+	static std::string BreakString(const std::string s, int lineWidth)
+	{
+		std::string result = s;
+
+		size_t strLen = result.size();
+
+		for (int i = 0; i < strLen; i++)
+		{
+			if (s[i] != '\0' && i % lineWidth == 0 && i > 0)
+			{
+				result.insert(result.begin() + i, '\n');
+			}		
+		}
+
+		return result;
+	}
 
 
 };
