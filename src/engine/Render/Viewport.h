@@ -1,5 +1,7 @@
 #pragma once 
 
+#include <glad/glad.h>
+
 namespace Engine
 {
 	class Viewport
@@ -15,6 +17,8 @@ namespace Engine
 
 		void SetWidth(uint32_t w) { m_Width = w; }
 		void SetHeight(uint32_t h) { m_Height = h; }
+
+		void Set() const { glViewport(0, 0, m_Width, m_Height); }
 
 		float AspectRatio() { return static_cast<float>(m_Width) / static_cast<float>(m_Height); }
 

@@ -3,6 +3,7 @@
 	This include file should contain all includes from the Engine framework
 
 */
+#pragma once
 
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/VertexBuffer.h"

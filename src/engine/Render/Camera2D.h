@@ -16,9 +16,6 @@ namespace Engine
 
 		glm::vec3 Position;
 
-		float Zoom = 1.0f;
-		float TargetZoom = Zoom;
-
 		Camera2D(const Viewport&);
 		~Camera2D() { };
 
@@ -33,6 +30,11 @@ namespace Engine
 		glm::mat4 m_ProjectionTransform;
 
 		const Viewport& m_Viewport;
+
+		void UpdateViewTransform()
+		{
+			m_ViewTransform = glm::translate(Position);
+		}
 
 	};
 
