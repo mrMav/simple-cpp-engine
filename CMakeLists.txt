@@ -26,4 +26,5 @@ target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 
 target_link_libraries(${PROJECT_NAME} glfw)
 
+#copy the shader source to the target folder
 file(COPY src/engine/Shaders DESTINATION .)
