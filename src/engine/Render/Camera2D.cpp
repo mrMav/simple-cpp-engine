@@ -3,7 +3,7 @@
 
 namespace Engine
 {
-	Camera2D::Camera2D(const Viewport& const v)
+	Camera2D::Camera2D(const Viewport& v)
 		: m_Viewport(v)
 	{
 		Position = glm::vec3(m_Viewport.Width() / 2.0f, m_Viewport.Height() / 2.0f, -1.0f);

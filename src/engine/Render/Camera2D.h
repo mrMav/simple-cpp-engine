@@ -1,3 +1,4 @@
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,7 +19,7 @@ namespace Engine
 		float Zoom = 1.0f;
 		float TargetZoom = Zoom;
 
-		Camera2D(const Viewport& const);
+		Camera2D(const Viewport&);
 		~Camera2D() { };
 
 		void Update(float gameTime);
@@ -31,7 +32,7 @@ namespace Engine
 		glm::mat4 m_ViewTransform;
 		glm::mat4 m_ProjectionTransform;
 
-		const Viewport& const m_Viewport;
+		const Viewport& m_Viewport;
 
 	};
 

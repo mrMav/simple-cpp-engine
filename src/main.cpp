@@ -9,19 +9,6 @@
 
 using namespace Engine;
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
-{
-  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
-}
-
 int main()
 {
     std::cout << "We meet again." << std::endl;
@@ -33,7 +20,6 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
 
     GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
     if (!window)
@@ -92,6 +78,9 @@ int main()
     VertexBuffer vb = VertexBuffer(&(vertexDataTriangle[0]), vertexDataTriangle.size() * sizeof(VertexPositionColor));
     VertexArray va(&VertexPositionColor::Attributes);
     IndexBuffer ib = IndexBuffer(&triangleIndices[0], triangleIndices.size());
+
+    //Viewport
+    
 
     float time;
     glm::vec3 color = glm::vec3(0.85, 0.4, 0.6);
