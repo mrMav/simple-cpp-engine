@@ -27,4 +27,17 @@ target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
 target_link_libraries(${PROJECT_NAME} glfw)
 
 #copy the shader source to the target folder
-file(COPY src/engine/Shaders DESTINATION .)
+set(SHADERS_SOURCE
+    ${CMAKE_SOURCE_DIR}/src/Engine/Shaders/vertex.vert
+    ${CMAKE_SOURCE_DIR}/src/Engine/Shaders/fragment.frag
+)
+
+set(SHADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/Shaders)
+
+add_custom_target(COPY_SHADERS
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERS_DIR}            
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SHADERS_SOURCE} ${SHADERS_DIR}
+    COMMENT "Copying shaders source files to build..."
+)
+
+add_dependencies(${PROJECT_NAME} COPY_SHADERS)

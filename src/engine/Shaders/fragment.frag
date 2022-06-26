@@ -9,7 +9,7 @@ uniform float uTime;
 
 void main(){
 
-    //float v = sin(uTime) / 2.0 + 0.5;
-    FragColor = vec4(vertexColor, 1.0);
+    float v = (sin(uTime));
+    FragColor = vec4(vertexColor * v, 1.0);
 
 }
