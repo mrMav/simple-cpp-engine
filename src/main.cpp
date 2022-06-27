@@ -21,9 +21,9 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    uint32_t gameWidth = 640, gameHeight = 480;
+    uint32_t gameWidth = 1280, gameHeight = 720;
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(gameWidth, gameHeight, "OpenGL Triangle", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -60,13 +60,11 @@ int main()
 
     std::vector<VertexPositionColor> vertexDataSquare =
     {
-        VertexPositionColor{glm::vec3(-0.9f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3( 0.9f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
+        VertexPositionColor{glm::vec3(-25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3(-25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f)}
     };
-
-    // R:231,G:60,B:0,A:255
 
     std::vector<uint16_t> triangleIndices = 
     {
@@ -78,20 +76,26 @@ int main()
         0, 1, 2,
         0, 2, 3
     };
-    
+
     Shader shader("Shaders/vertex.vert", "Shaders/fragment.frag");
     
-    VertexBuffer vb = VertexBuffer(&(vertexDataTriangle[0]), vertexDataTriangle.size() * sizeof(VertexPositionColor));
+    VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColor));
     VertexArray va(&VertexPositionColor::Attributes);
-    IndexBuffer ib = IndexBuffer(&triangleIndices[0], triangleIndices.size());
+    IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
 
     Viewport viewport(gameWidth, gameHeight);
     viewport.Set();
 
     Camera2D camera(viewport);
+    
+    glm::mat4 squareTransform(1.0f);
+    glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, 0.0f);
 
     float time;
-    glm::vec3 color = glm::vec3(0.85, 0.4, 0.6);
+    float angle = 0;
+    glm::vec3 color = glm::vec3(0, 1, 0);
+
+    glClearColor(0.392, 0.584, 0.929, 1);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -99,11 +103,18 @@ int main()
 
         camera.Update(0.0f);
 
+        // update square transform
         time = glfwGetTime();
+        angle += 3.14 / 360;
+
+        squareTransform = glm::translate(squarePosition);
+        squareTransform = glm::scale(squareTransform, glm::vec3(sin(time) * 1.5 + 2));
+        squareTransform = glm::rotate(squareTransform, angle, glm::vec3(0, 0, 1));
 
         shader.use();
         shader.setVec3("uColor", color);
         shader.setFloat("uTime", time);
+        shader.setMat4("uModel", squareTransform);
         shader.setMat4("uView", camera.GetViewTransform());
         shader.setMat4("uProjection", camera.GetViewProjectionTransform());
 
