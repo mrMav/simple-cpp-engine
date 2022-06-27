@@ -12,6 +12,7 @@ add_subdirectory(src/Engine)
 add_subdirectory(src/Engine/OpenGL)
 add_subdirectory(src/Engine/Render)
 add_subdirectory(src/Engine/Input)
+add_subdirectory(src/Engine/Utils)
 
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)

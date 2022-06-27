@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <limits>
 
 #include "Engine/Engine.h"
 
@@ -48,8 +49,8 @@ int main()
     // contexts but isn't necessary for our simple use case.
     glDebugMessageCallback(GLUtils::GLDebugMessageCallback, 0);
     
-    // ok, let's see how much I can do from memory
-
+    Input::Init(window);    
+    
     std::vector<VertexPositionColor> vertexDataTriangle =
     {
         VertexPositionColor{glm::vec3( 0.0f, 40.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
@@ -90,9 +91,13 @@ int main()
     glm::mat4 squareTransform(1.0f);
     glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, 0.0f);
 
-    float time;
+    float time = 0;
+    float delta;
     float angle = 0;
     glm::vec3 color = glm::vec3(0, 1, 0);
+
+    float lastDown = 0;
+    float bestTime = std::numeric_limits<float>::max();
 
     glClearColor(0.392, 0.584, 0.929, 1);
 
@@ -103,11 +108,25 @@ int main()
         camera.Update(0.0f);
 
         // update square transform
+        float newTime = glfwGetTime();
+        delta = newTime - time;
         time = glfwGetTime();
         angle += 3.14 / 360;
 
+        if (Input::IsKeyPressed(Key::Up))
+        {
+            angle += 2.0f * delta;
+        }
+
+        if (Input::IsKeyJustDown(Key::Down) || Input::IsKeyJustDown(Key::Up))
+        {
+            bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
+            lastDown = time;
+            std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  std::endl;
+        }
+
         squareTransform = glm::translate(squarePosition);
-        squareTransform = glm::scale(squareTransform, glm::vec3(sin(time) * 1.5 + 2));
+        squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5));
         squareTransform = glm::rotate(squareTransform, angle, glm::vec3(0, 0, 1));
 
         shader.use();
@@ -120,8 +139,12 @@ int main()
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         
+        Input::Update();  // TODO: this function to be moved to application level
+                          // must be called at the end of the gameloop, but before polling events
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
+
     }
 
     vb.Delete();
