@@ -40,7 +40,6 @@ int main()
         exit(EXIT_FAILURE);
     }
     
-
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
