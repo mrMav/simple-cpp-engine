@@ -3,6 +3,11 @@
 #include <glfw/glfw3.h>
 
 #include <glm/glm.hpp>
+#include <vector>
+
+#include "Engine/Engine.h"
+
+using namespace Engine;
 
 int main()
 {
@@ -16,135 +21,115 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
+    uint32_t gameWidth = 1280, gameHeight = 720;
+
+    GLFWwindow* window = glfwCreateWindow(gameWidth, gameHeight, "OpenGL Triangle", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
 
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
+
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+    {        
+        std::cout << "Failed to initialize GLAD!" << std::endl;
         exit(EXIT_FAILURE);
     }
+    
 
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+    // Set the function that will be triggered by the callback, the second parameter
+    // is the data parameter of the callback, it can be useful for different
+    // contexts but isn't necessary for our simple use case.
+    glDebugMessageCallback(GLUtils::GLDebugMessageCallback, 0);
     
     // ok, let's see how much I can do from memory
 
-    float vertices[] = {
-         0.0f,  0.9f, 0.0f,
-        -0.9f, -0.9f, 0.0f,
-         0.9f, -0.9f, 0.0f
+    std::vector<VertexPositionColor> vertexDataTriangle =
+    {
+        VertexPositionColor{glm::vec3( 0.0f, 40.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3(-20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)}
     };
 
-    const char *vertexShaderSource = "#version 460 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "void main(){\n"
-        "   gl_Position = vec4(aPos, 1.0);\n"
-        "}\n";
-
-    const char *fragmentShaderSource = "#version 460 core\n"
-        "out vec4 FragColor;\n"
-        "uniform vec3 uColor;\n"
-        "uniform float uTime;"
-        "void main(){\n"
-        "   float v = sin(uTime) / 2.0 + 0.5;"
-        "   FragColor = vec4(uColor.r, uColor.g, uColor.b * v, 1.0);\n"
-        "}\n";
-
-    GLuint vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-
-    GLint success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
+    std::vector<VertexPositionColor> vertexDataSquare =
     {
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cout << "Error compiling vertex shader\n" << infoLog << std::endl;
-    }
+        VertexPositionColor{glm::vec3(-25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3(-25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f)}
+    };
 
-    GLuint fragementShader;
-    fragementShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragementShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragementShader);
-
-    glGetShaderiv(fragementShader, GL_COMPILE_STATUS, &success);
-
-    if(!success)
+    std::vector<uint16_t> triangleIndices = 
     {
-        glGetShaderInfoLog(fragementShader, 512, nullptr, infoLog);
-        std::cout << "Error compiling fragment shader\n" << infoLog << std::endl;
-    }
+        0, 1, 2
+    };
 
-    GLuint shaderProgram;
-    shaderProgram = glCreateProgram();
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragementShader);
-    glLinkProgram(shaderProgram);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success)
+    std::vector<uint16_t> squareIndices = 
     {
-        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-        std::cout << "Error linking shaders\n" << infoLog << std::endl;
-    }
+        0, 1, 2,
+        0, 2, 3
+    };
 
-    glUseProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragementShader);
-
-    GLuint vbo, vao;
-
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    Shader shader("Shaders/vertex.vert", "Shaders/fragment.frag");
     
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)0);
-    glEnableVertexAttribArray(0);
+    VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColor));
+    VertexArray va(&VertexPositionColor::Attributes);
+    IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
+
+    Viewport viewport(gameWidth, gameHeight);
+    viewport.Set();
+
+    Camera2D camera(viewport);
     
+    glm::mat4 squareTransform(1.0f);
+    glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, 0.0f);
+
     float time;
-    glm::vec3 color = glm::vec3(0.85, 0.4, 0.6);
+    float angle = 0;
+    glm::vec3 color = glm::vec3(0, 1, 0);
+
+    glClearColor(0.392, 0.584, 0.929, 1);
 
     while (!glfwWindowShouldClose(window))
     {
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        const float ratio = width / (float) height;
-
-        glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        time = glfwGetTime();
-        GLuint vertexColorLocation = glGetUniformLocation(shaderProgram, "uColor");
-        GLuint timeLocation = glGetUniformLocation(shaderProgram, "uTime");
-        
-        glUseProgram(shaderProgram);
-        glUniform3f(vertexColorLocation, color.r, color.g, color.b);
-        glUniform1f(timeLocation, time);
+        camera.Update(0.0f);
 
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // update square transform
+        time = glfwGetTime();
+        angle += 3.14 / 360;
+
+        squareTransform = glm::translate(squarePosition);
+        squareTransform = glm::scale(squareTransform, glm::vec3(sin(time) * 1.5 + 2));
+        squareTransform = glm::rotate(squareTransform, angle, glm::vec3(0, 0, 1));
+
+        shader.use();
+        shader.setVec3("uColor", color);
+        shader.setFloat("uTime", time);
+        shader.setMat4("uModel", squareTransform);
+        shader.setMat4("uView", camera.GetViewTransform());
+        shader.setMat4("uProjection", camera.GetViewProjectionTransform());
+
+        va.Bind();
+        glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glfwDestroyWindow(window);
+    vb.Delete();
 
+    glfwDestroyWindow(window);
     glfwTerminate();
+
     exit(EXIT_SUCCESS);
 
-    return 0;
 }
