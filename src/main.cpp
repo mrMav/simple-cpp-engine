@@ -9,19 +9,6 @@
 
 using namespace Engine;
 
-void GLAPIENTRY MessageCallback( GLenum source,
-                 GLenum type,
-                 GLuint id,
-                 GLenum severity,
-                 GLsizei length,
-                 const GLchar* message,
-                 const void* userParam )
-{
-  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
-}
-
 int main()
 {
     std::cout << "We meet again." << std::endl;
@@ -34,6 +21,7 @@ int main()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
+    uint32_t gameWidth = 640, gameHeight = 480;
 
     GLFWwindow* window = glfwCreateWindow(640, 480, "OpenGL Triangle", NULL, NULL);
     if (!window)
@@ -41,6 +29,8 @@ int main()
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
 
     glfwMakeContextCurrent(window);
 
@@ -63,9 +53,9 @@ int main()
 
     std::vector<VertexPositionColor> vertexDataTriangle =
     {
-        VertexPositionColor{glm::vec3( 0.0f,  0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
-        VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
+        VertexPositionColor{glm::vec3( 0.0f, 40.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3( 20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)},
+        VertexPositionColor{glm::vec3(-20.0f, 0.0f, 0.0f), glm::vec3(0.906f,0.235f, 0.0f)}
     };
 
     std::vector<VertexPositionColor> vertexDataSquare =
@@ -75,6 +65,8 @@ int main()
         VertexPositionColor{glm::vec3( 0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)},
         VertexPositionColor{glm::vec3(-0.9f, -0.9f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)}
     };
+
+    // R:231,G:60,B:0,A:255
 
     std::vector<uint16_t> triangleIndices = 
     {
@@ -93,23 +85,27 @@ int main()
     VertexArray va(&VertexPositionColor::Attributes);
     IndexBuffer ib = IndexBuffer(&triangleIndices[0], triangleIndices.size());
 
+    Viewport viewport(gameWidth, gameHeight);
+    viewport.Set();
+
+    Camera2D camera(viewport);
+
     float time;
     glm::vec3 color = glm::vec3(0.85, 0.4, 0.6);
 
     while (!glfwWindowShouldClose(window))
     {
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
-        const float ratio = width / (float) height;
-
-        glViewport(0, 0, width, height);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        camera.Update(0.0f);
 
         time = glfwGetTime();
 
         shader.use();
         shader.setVec3("uColor", color);
         shader.setFloat("uTime", time);
+        shader.setMat4("uView", camera.GetViewTransform());
+        shader.setMat4("uProjection", camera.GetViewProjectionTransform());
 
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
