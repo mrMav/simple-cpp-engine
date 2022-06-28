@@ -6,8 +6,11 @@
 #include <vector>
 
 
-class VertexBuffer
+namespace Engine
 {
+
+	class VertexBuffer
+	{
 	public:
 
 		VertexBuffer(const void* data, const size_t dataSize)
@@ -18,7 +21,7 @@ class VertexBuffer
 			SetData(m_Data, m_DataSize);
 
 		}
-		~VertexBuffer(){};
+		~VertexBuffer() {};
 
 		void Bind() const
 		{
@@ -37,15 +40,17 @@ class VertexBuffer
 
 		void Delete()
 		{
-			glDeleteBuffers(1, &m_Handle);	
+			glDeleteBuffers(1, &m_Handle);
 		}
 
-private:
+	private:
 
-	GLuint m_Handle;
+		GLuint m_Handle;
 
-	const void* m_Data;
+		const void* m_Data;
 
-	size_t m_DataSize;
+		size_t m_DataSize;
 
-};
+	};
+
+}

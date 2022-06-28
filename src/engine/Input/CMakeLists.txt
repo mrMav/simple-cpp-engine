@@ -1,14 +1,14 @@
 
 set(HEADERS
     ${HEADERS}
-    Internal.h
-    Engine.h
-    Game.h
+    Input.h
+    KeyCodes.h
+    GamePadButtonCodes.h
 )
 
 set(SOURCE
     ${SOURCE}
-    Game.cpp
+    Input.cpp
 )
 
 target_sources(${PROJECT_NAME} 

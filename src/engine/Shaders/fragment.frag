@@ -4,7 +4,7 @@ in vec3 vertexColor;
 
 out vec4 FragColor;
 
-uniform vec3 uColor;
+uniform vec4 uColor;
 uniform float uTime;
 
 // https://gist.github.com/mairod/a75e7b44f68110e1576d77419d608786
@@ -37,7 +37,6 @@ vec3 hueShift( vec3 color, float hueAdjust ){
 
 void main(){
 
-    float v = (sin(uTime));
-    FragColor = vec4(hueShift(vertexColor, uTime), 1.0);
+    FragColor = vec4(hueShift(vertexColor * uColor.xyz, uTime), uColor.a);
 
 }
