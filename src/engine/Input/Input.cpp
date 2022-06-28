@@ -28,7 +28,9 @@ namespace Engine
 		std::vector<uint8_t> Joysticks;
 		std::vector<GLFWgamepadstate> LastGamePadStates;
 		std::vector<GLFWgamepadstate> GamePadStates;
-		
+
+		float DeadZone = 0;
+		float HalfDeadZone = 0;
 	};
 
 	static InputData m_InputData;
@@ -99,6 +101,17 @@ namespace Engine
 
 	/* Joystick */
 
+	/// <summary>
+	/// Sets the thumbsticks dead zone
+	/// </summary>
+	/// <param name="jid">the controller id</param>
+	/// <param name="zone">a number between 0 and 1 (inclusive)</param>
+	void Input::SetDeadZone(int jid, float zone)
+	{
+		m_InputData.DeadZone     = zone;
+		m_InputData.HalfDeadZone = zone / 2.0f;
+	}
+
 	bool Input::IsButtonPressed(uint8_t jid, GamePadButtonCode btn)
 	{
 		return m_InputData.GamePadStates[jid].buttons[btn] == GLFW_PRESS;
@@ -117,7 +130,18 @@ namespace Engine
 
 	float Input::GetAxisStrength(uint8_t jid, GamePadAxisCode axis)
 	{
+		if (axis < GamePadAxis::GamePadAxisLeftTrigger)
+		{
+			return ApplyGamePadDeadZone(m_InputData.GamePadStates[jid].axes[axis]);
+		}
+
 		return m_InputData.GamePadStates[jid].axes[axis];
+	}
+
+	float Input::ApplyGamePadDeadZone(float v)
+	{
+		if (v > -m_InputData.HalfDeadZone && v < m_InputData.HalfDeadZone) return 0.0f;
+		else return v;
 	}
 
 	void Input::DetectConnectedJoysticks()

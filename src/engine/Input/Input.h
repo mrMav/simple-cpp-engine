@@ -51,11 +51,15 @@ namespace Engine
 
 		static void SetJoysticks(int id, int event);
 
+		static void SetDeadZone(int jid, float zone);
+
 		static void PrintJoysticksList();
 
 	private:
 
-		static void Input::DetectConnectedJoysticks();
+		static void DetectConnectedJoysticks();
+
+		static float ApplyGamePadDeadZone(float v);
 
 	};
 }

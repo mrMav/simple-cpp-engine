@@ -98,6 +98,9 @@ int main()
     float scaleplus = 0;
     glm::vec4 color = glm::vec4(1, 1, 1, 1);
 
+    float deadzone = 0.21f; // I blame Rocket League
+    Input::SetDeadZone(0, deadzone);
+
     float lastDown = 0;
     float bestTime = std::numeric_limits<float>::max();
 
@@ -131,6 +134,20 @@ int main()
             std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  " Delta time (ms) is: " << delta * 1000.0f << std::endl;
         }
 
+        if (Input::IsKeyJustDown(Key::KPAdd))
+        {
+            deadzone += 0.01f;
+            Input::SetDeadZone(0, deadzone);
+            std::cout << deadzone << std::endl;
+        }
+
+        if (Input::IsKeyJustDown(Key::KPSubtract))
+        {
+            deadzone -= 0.01f;
+            Input::SetDeadZone(0, deadzone);
+            std::cout << deadzone << std::endl;
+        }
+
         if (Input::IsButtonJustDown(0, GamePadButton::ButtonY) || Input::IsButtonJustDown(0, GamePadButton::ButtonX))
         {
             bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
@@ -162,7 +179,7 @@ int main()
         color.b =  color.r;
         color.a = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) * -1;
 
-        std::cout << glm::to_string(color) << std::endl;
+        //std::cout << glm::to_string(color) << std::endl;
 
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
