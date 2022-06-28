@@ -172,7 +172,7 @@ int main()
 
         float speed = 600.0f;
         squarePosition.x += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftX)  * speed * delta;
-        squarePosition.y -= Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
+        squarePosition.y += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
 
         color.r = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) * -1;
         color.g =  color.r;
