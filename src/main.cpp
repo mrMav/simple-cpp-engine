@@ -96,11 +96,13 @@ int main()
     float delta;
     float angle = 0;
     float scaleplus = 0;
-    glm::vec3 color = glm::vec3(0, 1, 0);
+    glm::vec4 color = glm::vec4(1, 1, 1, 1);
 
     float lastDown = 0;
     float bestTime = std::numeric_limits<float>::max();
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.392, 0.584, 0.929, 1);
 
     while (!glfwWindowShouldClose(window))
@@ -129,7 +131,7 @@ int main()
             std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  " Delta time (ms) is: " << delta * 1000.0f << std::endl;
         }
 
-        if (Input::IsButtonJustDown(0, Button::ButtonY) || Input::IsButtonJustDown(0, Button::ButtonX))
+        if (Input::IsButtonJustDown(0, GamePadButton::ButtonY) || Input::IsButtonJustDown(0, GamePadButton::ButtonX))
         {
             bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
             lastDown = time;
@@ -141,15 +143,26 @@ int main()
             Input::PrintJoysticksList();
         }
 
-        if (Input::IsButtonPressed(0, Button::ButtonA))
+        if (Input::IsButtonPressed(0, GamePadButton::ButtonA))
         {
             angle += 180.0f * delta;
         }
 
-        if (Input::IsButtonJustDown(0, Button::ButtonB))
+        if (Input::IsButtonJustDown(0, GamePadButton::ButtonB))
         {
             scaleplus = 25;
         }
+
+        float speed = 600.0f;
+        squarePosition.x += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftX)  * speed * delta;
+        squarePosition.y -= Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
+
+        color.r = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) * -1;
+        color.g =  color.r;
+        color.b =  color.r;
+        color.a = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) * -1;
+
+        std::cout << glm::to_string(color) << std::endl;
 
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
@@ -157,7 +170,7 @@ int main()
         scaleplus *= 0.999;
 
         shader.use();
-        shader.setVec3("uColor", color);
+        shader.setVec4("uColor", color);
         shader.setFloat("uTime", time);
         shader.setMat4("uModel", squareTransform);
         shader.setMat4("uView", camera.GetViewTransform());

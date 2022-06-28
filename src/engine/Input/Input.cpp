@@ -115,6 +115,11 @@ namespace Engine
 				m_InputData.GamePadStates[jid].buttons[btn]	    == GLFW_PRESS;
 	}
 
+	float Input::GetAxisStrength(uint8_t jid, GamePadAxisCode axis)
+	{
+		return m_InputData.GamePadStates[jid].axes[axis];
+	}
+
 	void Input::DetectConnectedJoysticks()
 	{
 		for (uint8_t i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST + 1; i++)

@@ -2,9 +2,10 @@
 
 namespace Engine
 {
-	using GamePadButtonCode = uint16_t;
+	using GamePadButtonCode = uint8_t;
+	using GamePadAxisCode   = uint8_t;
 
-	namespace Button
+	namespace GamePadButton
 	{
 		enum : GamePadButtonCode
 		{
@@ -26,5 +27,19 @@ namespace Engine
 			DPadLeft        = 14			
 		};
 
+	}
+
+	namespace GamePadAxis
+	{
+		enum : GamePadAxisCode
+		{
+			// From glfw3.h
+			GamePadAxisLeftX = 0,
+			GamePadAxisLeftY = 1,
+			GamePadAxisRightX = 2,
+			GamePadAxisRightY = 3,
+			GamePadAxisLeftTrigger = 4,
+			GamePadAxisRightTrigger = 5
+		};
 	}
 }

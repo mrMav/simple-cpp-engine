@@ -11,6 +11,7 @@
 
 namespace Engine
 {
+
 	// wrapper class for glfw input
 	class Input
 	{
@@ -45,6 +46,8 @@ namespace Engine
 		static bool IsButtonUp(uint8_t jid, GamePadButtonCode btn);
 
 		static bool IsButtonJustDown(uint8_t jid, GamePadButtonCode btn);
+
+		static float GetAxisStrength(uint8_t jid, GamePadAxisCode axis);
 
 		static void SetJoysticks(int id, int event);
 
