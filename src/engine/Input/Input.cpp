@@ -12,14 +12,21 @@ namespace Engine
 {
 	struct InputData
 	{
+		InputData() :
+			GamePadStates(GLFW_JOYSTICK_LAST + 1), LastGamePadStates(GLFW_JOYSTICK_LAST + 1)
+		{
+
+		}
+
 		GLFWwindow* Window = nullptr;
 
 		/* Keyboard */
-		std::bitset<GLFW_KEY_LAST> LastFrameKeyMap;
-		std::bitset<GLFW_KEY_LAST> KeyMap;
+		std::bitset<GLFW_KEY_LAST + 1> LastFrameKeyMap;
+		std::bitset<GLFW_KEY_LAST + 1> KeyMap;
 
 		/* Joysticks */
 		std::vector<uint8_t> Joysticks;
+		std::vector<GLFWgamepadstate> LastGamePadStates;
 		std::vector<GLFWgamepadstate> GamePadStates;
 		
 	};
@@ -40,8 +47,6 @@ namespace Engine
 	{	
 		m_InputData.Window = window;
 
-		m_InputData.GamePadStates = std::vector<GLFWgamepadstate>(GLFW_JOYSTICK_LAST + 1);
-
 		glfwSetKeyCallback(window, GLFWKeyInputCallback);
 		glfwSetJoystickCallback(GLFWJoystickCallback);
 
@@ -59,8 +64,10 @@ namespace Engine
 	}
 
 	void Input::PostUpdate()
-	{
+	{	
+		// bitsets copy faster than vectors
 		m_InputData.LastFrameKeyMap = std::bitset(m_InputData.KeyMap);
+		m_InputData.LastGamePadStates = std::vector(m_InputData.GamePadStates);
 	}
 
 	/* Keyboard */
@@ -95,6 +102,17 @@ namespace Engine
 	bool Input::IsButtonPressed(uint8_t jid, GamePadButtonCode btn)
 	{
 		return m_InputData.GamePadStates[jid].buttons[btn] == GLFW_PRESS;
+	}
+
+	bool Input::IsButtonUp(uint8_t jid, GamePadButtonCode btn)
+	{
+		return m_InputData.GamePadStates[jid].buttons[btn] == GLFW_RELEASE;
+	}
+
+	bool Input::IsButtonJustDown(uint8_t jid, GamePadButtonCode btn)
+	{
+		return  m_InputData.LastGamePadStates[jid].buttons[btn] == GLFW_RELEASE &&
+				m_InputData.GamePadStates[jid].buttons[btn]	    == GLFW_PRESS;
 	}
 
 	void Input::DetectConnectedJoysticks()

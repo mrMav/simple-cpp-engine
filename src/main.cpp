@@ -115,7 +115,7 @@ int main()
         float newTime = glfwGetTime();
         delta = newTime - time;
         time = glfwGetTime();
-        angle += (3.14 / 360) * delta;
+        angle -= 10 * delta;
 
         if (Input::IsKeyPressed(Key::Up))
         {
@@ -129,6 +129,13 @@ int main()
             std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  " Delta time (ms) is: " << delta * 1000.0f << std::endl;
         }
 
+        if (Input::IsButtonJustDown(0, Button::ButtonY) || Input::IsButtonJustDown(0, Button::ButtonX))
+        {
+            bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
+            lastDown = time;
+            std::cout << "pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f << " Delta time (ms) is: " << delta * 1000.0f << std::endl;
+        }
+
         if (Input::IsKeyJustDown(Key::J))
         {
             Input::PrintJoysticksList();
@@ -136,12 +143,17 @@ int main()
 
         if (Input::IsButtonPressed(0, Button::ButtonA))
         {
+            angle += 180.0f * delta;
+        }
+
+        if (Input::IsButtonJustDown(0, Button::ButtonB))
+        {
             scaleplus = 25;
         }
 
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
-        squareTransform = glm::rotate(squareTransform, angle, glm::vec3(0, 0, 1));
+        squareTransform = glm::rotate(squareTransform, glm::radians(angle), glm::vec3(0, 0, 1));
         scaleplus *= 0.999;
 
         shader.use();

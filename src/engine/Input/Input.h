@@ -42,6 +42,10 @@ namespace Engine
 
 		static bool IsButtonPressed(uint8_t jid, GamePadButtonCode btn);
 
+		static bool IsButtonUp(uint8_t jid, GamePadButtonCode btn);
+
+		static bool IsButtonJustDown(uint8_t jid, GamePadButtonCode btn);
+
 		static void SetJoysticks(int id, int event);
 
 		static void PrintJoysticksList();
