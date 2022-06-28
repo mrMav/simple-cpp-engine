@@ -191,7 +191,7 @@ int main()
         shader.setFloat("uTime", time);
         shader.setMat4("uModel", squareTransform);
         shader.setMat4("uView", camera.GetViewTransform());
-        shader.setMat4("uProjection", camera.GetViewProjectionTransform());
+        shader.setMat4("uProjection", camera.GetProjectionViewTransform());
 
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);

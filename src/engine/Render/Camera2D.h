@@ -22,7 +22,7 @@ namespace Engine
 		void Update(float gameTime);
 
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }
-		glm::mat4 GetViewProjectionTransform() const { return m_ViewProjectionTransform; }
+		glm::mat4 GetProjectionViewTransform() const { return m_ProjectionViewTransform; }
 
 	private:
 
@@ -30,7 +30,7 @@ namespace Engine
 
 		glm::mat4 m_ViewTransform;
 		glm::mat4 m_ProjectionTransform;
-		glm::mat4 m_ViewProjectionTransform;
+		glm::mat4 m_ProjectionViewTransform;
 
 		const Viewport& m_Viewport;
 
