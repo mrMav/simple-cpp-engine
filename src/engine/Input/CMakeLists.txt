@@ -2,6 +2,8 @@
 set(HEADERS
     ${HEADERS}
     Input.h
+    KeyCodes.h
+    GamePadButtonCodes.h
 )
 
 set(SOURCE

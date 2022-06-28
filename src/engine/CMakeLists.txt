@@ -1,8 +1,9 @@
 
 set(HEADERS
     ${HEADERS}
-    Game.h
+    Internal.h
     Engine.h
+    Game.h
 )
 
 set(SOURCE

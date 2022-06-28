@@ -1,51 +1,151 @@
-
 #include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <map>
 
+#include "Internal.h"
 #include "Input.h"
 #include "Utils/Utils.h"
 
-
 namespace Engine
 {
-	std::bitset<GLFW_KEY_LAST> Input::m_LastFrameKeyMap;
-	std::bitset<GLFW_KEY_LAST> Input::m_KeyMap;
+	struct InputData
+	{
+		GLFWwindow* Window = nullptr;
+
+		/* Keyboard */
+		std::bitset<GLFW_KEY_LAST> LastFrameKeyMap;
+		std::bitset<GLFW_KEY_LAST> KeyMap;
+
+		/* Joysticks */
+		std::vector<uint8_t> Joysticks;
+		std::vector<GLFWgamepadstate> GamePadStates;
+		
+	};
+
+	static InputData m_InputData;
 
 	void GLFWKeyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		Input::SetMap(key, scancode, action, mods);
 	}
 
-	void Input::Init(GLFWwindow* window)
-	{		
-		glfwSetKeyCallback(window, GLFWKeyInputCallback);
+	void GLFWJoystickCallback(int id, int event)
+	{
+		Input::SetJoysticks(id, event);			
 	}
 
-	void Input::Update()
-	{
-		m_LastFrameKeyMap = std::bitset(m_KeyMap);
+	void Input::Init(GLFWwindow* window)
+	{	
+		m_InputData.Window = window;
+
+		m_InputData.GamePadStates = std::vector<GLFWgamepadstate>(GLFW_JOYSTICK_LAST + 1);
+
+		glfwSetKeyCallback(window, GLFWKeyInputCallback);
+		glfwSetJoystickCallback(GLFWJoystickCallback);
+
+		DetectConnectedJoysticks();
+
 	}
+
+	void Input::PreUpdate()
+	{
+		int i = 0;
+		for (const auto& jid : m_InputData.Joysticks)
+		{			
+			glfwGetGamepadState(jid, &(m_InputData.GamePadStates[i++]));			
+		}
+	}
+
+	void Input::PostUpdate()
+	{
+		m_InputData.LastFrameKeyMap = std::bitset(m_InputData.KeyMap);
+	}
+
+	/* Keyboard */
 
 	void Input::SetMap(int key, int scancode, int action, int mods)
-	{
+	{		
+		_ENGINE_PASS_OR_RETURN(key != GLFW_KEY_UNKNOWN);
+
 		if (action > GLFW_RELEASE)
-			m_KeyMap.set(key);
+			m_InputData.KeyMap.set(key);
 		else
-			m_KeyMap.reset(key);
+			m_InputData.KeyMap.reset(key);
 	}
 
 	bool Input::IsKeyPressed(KeyCode key)
 	{
-		return m_KeyMap.test(key);
+		return m_InputData.KeyMap.test(key);
 	}
 
 	bool Input::IsKeyUp(KeyCode key)
 	{
-		return !m_KeyMap.test(key);
+		return !m_InputData.KeyMap.test(key);
 	}
 
 	bool Input::IsKeyJustDown(KeyCode key)
 	{
-		return !(m_LastFrameKeyMap.test(key)) && m_KeyMap.test(key);
+		return !(m_InputData.LastFrameKeyMap.test(key)) && m_InputData.KeyMap.test(key);
+	}
+
+	/* Joystick */
+
+	bool Input::IsButtonPressed(uint8_t jid, GamePadButtonCode btn)
+	{
+		return m_InputData.GamePadStates[jid].buttons[btn] == GLFW_PRESS;
+	}
+
+	void Input::DetectConnectedJoysticks()
+	{
+		for (uint8_t i = GLFW_JOYSTICK_1; i < GLFW_JOYSTICK_LAST + 1; i++)
+		{
+			if(glfwJoystickPresent(i))
+				m_InputData.Joysticks.push_back(i);
+		}
+	}
+
+	void Input::SetJoysticks(int id, int event)
+	{
+		if (event == GLFW_CONNECTED)
+		{
+			if (!glfwJoystickIsGamepad(id))
+			{
+				_ENGINE_LOG("INPUT", "Joystick not supported! (not gamepad mapping support)")
+				return;
+			}
+
+			m_InputData.Joysticks.push_back(id);
+
+			_ENGINE_LOG("INPUT", "Joystick connected!")
+
+		}
+		else if (event == GLFW_DISCONNECTED)
+		{
+			// https://en.wikipedia.org/wiki/Erase%E2%80%93remove_idiom
+			m_InputData.Joysticks.erase(std::remove(m_InputData.Joysticks.begin(), m_InputData.Joysticks.end(), id), m_InputData.Joysticks.end());
+			
+			_ENGINE_LOG("INPUT", "Joystick disconnected!")
+		}
+
+		if (!glfwGetWindowAttrib(m_InputData.Window, GLFW_FOCUSED))
+			glfwRequestWindowAttention(m_InputData.Window);
+	}
+
+	void Input::PrintJoysticksList()
+	{
+		std::string str;
+
+		for (const auto& j : m_InputData.Joysticks)
+		{
+			str.append("id: " + std::to_string(j));
+			str.append(" Name: ");
+			str.append(glfwGetJoystickName(j));
+			str.append("\n");
+		}
+
+		_ENGINE_LOG("INPUT", str)
 	}
 
 }

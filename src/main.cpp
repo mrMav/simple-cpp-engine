@@ -20,6 +20,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_FALSE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     uint32_t gameWidth = 1280, gameHeight = 720;
@@ -94,6 +95,7 @@ int main()
     float time = 0;
     float delta;
     float angle = 0;
+    float scaleplus = 0;
     glm::vec3 color = glm::vec3(0, 1, 0);
 
     float lastDown = 0;
@@ -105,13 +107,15 @@ int main()
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
+        Input::PreUpdate();
+
         camera.Update(0.0f);
 
         // update square transform
         float newTime = glfwGetTime();
         delta = newTime - time;
         time = glfwGetTime();
-        angle += 3.14 / 360;
+        angle += (3.14 / 360) * delta;
 
         if (Input::IsKeyPressed(Key::Up))
         {
@@ -122,12 +126,23 @@ int main()
         {
             bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
             lastDown = time;
-            std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  std::endl;
+            std::cout << "Down was just pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f <<  " Delta time (ms) is: " << delta * 1000.0f << std::endl;
+        }
+
+        if (Input::IsKeyJustDown(Key::J))
+        {
+            Input::PrintJoysticksList();
+        }
+
+        if (Input::IsButtonPressed(0, Button::ButtonA))
+        {
+            scaleplus = 25;
         }
 
         squareTransform = glm::translate(squarePosition);
-        squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5));
+        squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
         squareTransform = glm::rotate(squareTransform, angle, glm::vec3(0, 0, 1));
+        scaleplus *= 0.999;
 
         shader.use();
         shader.setVec3("uColor", color);
@@ -139,10 +154,11 @@ int main()
         va.Bind();
         glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         
-        Input::Update();  // TODO: this function to be moved to application level
+        Input::PostUpdate();  // TODO: this function to be moved to application level
                           // must be called at the end of the gameloop, but before polling events
         
-        glfwSwapBuffers(window);
+        glFlush();
+        //glfwSwapBuffers(window);
         glfwPollEvents();
 
     }

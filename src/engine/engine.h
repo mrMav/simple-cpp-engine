@@ -18,5 +18,6 @@
 
 #include "Input/Input.h"
 #include "Input/KeyCodes.h"
+#include "Input/GamePadButtonCodes.h"
 
 #include "Utils/Utils.h"

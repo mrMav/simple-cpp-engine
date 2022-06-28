@@ -3,9 +3,11 @@
 #include <glfw/glfw3.h>
 
 #include <iostream>
+#include <vector>
 #include <bitset>
 
 #include "KeyCodes.h"
+#include "GamePadButtonCodes.h"
 
 namespace Engine
 {
@@ -16,7 +18,17 @@ namespace Engine
 
 		static void Init(GLFWwindow*);
 
-		static void Update();
+		/// <summary>
+		/// To be called before any game logic is processed.
+		/// </summary>
+		static void PreUpdate();
+
+		/// <summary>
+		/// To be called after all game logic is processed, but before glfw event polling.
+		/// </summary>
+		static void PostUpdate();
+
+		/*  Keyboard */
 
 		static void SetMap(int key, int scancode, int action, int mods);
 
@@ -26,10 +38,17 @@ namespace Engine
 
 		static bool IsKeyJustDown(KeyCode key);
 
+		/* Joysticks */
+
+		static bool IsButtonPressed(uint8_t jid, GamePadButtonCode btn);
+
+		static void SetJoysticks(int id, int event);
+
+		static void PrintJoysticksList();
+
 	private:
 
-		static std::bitset<GLFW_KEY_LAST> m_LastFrameKeyMap;
-		static std::bitset<GLFW_KEY_LAST> m_KeyMap;
+		static void Input::DetectConnectedJoysticks();
 
 	};
 }
