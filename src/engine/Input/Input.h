@@ -8,10 +8,11 @@
 
 #include "KeyCodes.h"
 #include "GamePadButtonCodes.h"
+#include "MouseCodes.h"
 
 namespace Engine
 {
-
+	
 	// wrapper class for glfw input
 	class Input
 	{
@@ -54,6 +55,10 @@ namespace Engine
 		static void SetDeadZone(int jid, float zone);
 
 		static void PrintJoysticksList();
+
+		/* Mouse */
+
+		static Cursor GetCursorPosition();
 
 	private:
 

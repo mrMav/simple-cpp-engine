@@ -4,6 +4,7 @@ set(HEADERS
     Input.h
     KeyCodes.h
     GamePadButtonCodes.h
+    MouseCodes.h
 )
 
 set(SOURCE

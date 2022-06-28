@@ -10,10 +10,11 @@
 
 namespace Engine
 {
+	
 	struct InputData
 	{
 		InputData() :
-			GamePadStates(GLFW_JOYSTICK_LAST + 1), LastGamePadStates(GLFW_JOYSTICK_LAST + 1)
+			GamePadStates(GLFW_JOYSTICK_LAST + 1), LastGamePadStates(GLFW_JOYSTICK_LAST + 1), CursorPosition({ 0, 0 })
 		{
 
 		}
@@ -29,11 +30,16 @@ namespace Engine
 		std::vector<GLFWgamepadstate> LastGamePadStates;
 		std::vector<GLFWgamepadstate> GamePadStates;
 
+		/* Mouse */
+		Cursor CursorPosition;
+
 		float DeadZone = 0;
 		float HalfDeadZone = 0;
 	};
 
 	static InputData m_InputData;
+
+	/* glfw callbacks */
 
 	void GLFWKeyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
@@ -45,12 +51,23 @@ namespace Engine
 		Input::SetJoysticks(id, event);			
 	}
 
+	void GLFWCursosCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		m_InputData.CursorPosition.x = static_cast<uint32_t>(xpos);
+		m_InputData.CursorPosition.y = static_cast<uint32_t>(ypos);
+
+		//std::cout << m_InputData.CursorPosition.ToString() << std::endl;
+	}
+
+	/* Input */
+
 	void Input::Init(GLFWwindow* window)
 	{	
 		m_InputData.Window = window;
 
 		glfwSetKeyCallback(window, GLFWKeyInputCallback);
 		glfwSetJoystickCallback(GLFWJoystickCallback);
+		glfwSetCursorPosCallback(window, GLFWCursosCallback);
 
 		DetectConnectedJoysticks();
 
@@ -194,5 +211,14 @@ namespace Engine
 
 		_ENGINE_LOG("INPUT", str)
 	}
+
+	/* Mouse */
+
+	Cursor Input::GetCursorPosition()
+	{
+		return m_InputData.CursorPosition;
+	}
+
+
 
 }

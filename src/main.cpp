@@ -148,38 +148,46 @@ int main()
             std::cout << deadzone << std::endl;
         }
 
-        if (Input::IsButtonJustDown(0, GamePadButton::ButtonY) || Input::IsButtonJustDown(0, GamePadButton::ButtonX))
+        if (glfwJoystickPresent(0))
         {
-            bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
-            lastDown = time;
-            std::cout << "pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f << " Delta time (ms) is: " << delta * 1000.0f << std::endl;
+            if (Input::IsButtonJustDown(0, GamePadButton::ButtonY) || Input::IsButtonJustDown(0, GamePadButton::ButtonX))
+            {
+                bestTime = (time - lastDown) < bestTime ? (time - lastDown) : bestTime;
+                lastDown = time;
+                std::cout << "pressed at runtime time (ms): " << time * 1000.0f << " best time (ms): " << bestTime * 1000.0f << " Delta time (ms) is: " << delta * 1000.0f << std::endl;
+            }
+
+            if (Input::IsKeyJustDown(Key::J))
+            {
+                Input::PrintJoysticksList();
+            }
+
+            if (Input::IsButtonPressed(0, GamePadButton::ButtonA))
+            {
+                angle += 180.0f * delta;
+            }
+
+            if (Input::IsButtonJustDown(0, GamePadButton::ButtonB))
+            {
+                scaleplus = 25;
+            }
+
+            float speed = 600.0f;
+            squarePosition.x += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftX)  * speed * delta;
+            squarePosition.y += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
+
+            color.r = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) * -1;
+            color.g =  color.r;
+            color.b =  color.r;
+            color.a = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) * -1;
         }
 
-        if (Input::IsKeyJustDown(Key::J))
-        {
-            Input::PrintJoysticksList();
-        }
-
-        if (Input::IsButtonPressed(0, GamePadButton::ButtonA))
-        {
-            angle += 180.0f * delta;
-        }
-
-        if (Input::IsButtonJustDown(0, GamePadButton::ButtonB))
-        {
-            scaleplus = 25;
-        }
-
-        float speed = 600.0f;
-        squarePosition.x += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftX)  * speed * delta;
-        squarePosition.y += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
-
-        color.r = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) * -1;
-        color.g =  color.r;
-        color.b =  color.r;
-        color.a = Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) * -1;
 
         //std::cout << glm::to_string(color) << std::endl;
+
+        Cursor mousPos = Input::GetCursorPosition();
+        squarePosition.x = mousPos.x;
+        squarePosition.y = mousPos.y;
 
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
