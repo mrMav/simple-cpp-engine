@@ -108,6 +108,23 @@ int main()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.392, 0.584, 0.929, 1);
 
+    /* Test StackAllocator */
+
+    StackAllocator stack(1024);
+
+    u32* a = stack.Alloc<u32>(sizeof(u32));
+    StackFrame f1 = stack.GetFrame();
+    *a = 182;
+
+    u8* b = stack.Alloc<u8>(480);
+    StackFrame f2 = stack.GetFrame();
+
+    stack.ReleaseFrame(f2);
+
+    stack.Clear();
+
+    /***********************/
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);

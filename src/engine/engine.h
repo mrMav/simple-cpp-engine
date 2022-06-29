@@ -20,4 +20,6 @@
 #include "Input/KeyCodes.h"
 #include "Input/GamePadButtonCodes.h"
 
+#include "Memory/StackAllocator.h"
+
 #include "Utils/Utils.h"
