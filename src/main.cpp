@@ -92,6 +92,7 @@ int main()
     glm::mat4 squareTransform(1.0f);
     glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, 0.0f);
 
+    bool followMouse = true;
     float time = 0;
     float delta;
     float angle = 0;
@@ -148,6 +149,7 @@ int main()
             std::cout << deadzone << std::endl;
         }
 
+        followMouse = true;
         if (glfwJoystickPresent(0))
         {
             if (Input::IsButtonJustDown(0, GamePadButton::ButtonY) || Input::IsButtonJustDown(0, GamePadButton::ButtonX))
@@ -165,6 +167,7 @@ int main()
             if (Input::IsButtonPressed(0, GamePadButton::ButtonA))
             {
                 angle += 180.0f * delta;
+                followMouse = false;
             }
 
             if (Input::IsButtonJustDown(0, GamePadButton::ButtonB))
@@ -185,9 +188,12 @@ int main()
 
         //std::cout << glm::to_string(color) << std::endl;
 
-        Cursor mousPos = Input::GetCursorPosition();
-        squarePosition.x = mousPos.x;
-        squarePosition.y = mousPos.y;
+        if (followMouse)
+        {
+            Cursor mousPos = Input::GetCursorPosition();
+            squarePosition.x = mousPos.x;
+            squarePosition.y = mousPos.y;
+        }
 
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
