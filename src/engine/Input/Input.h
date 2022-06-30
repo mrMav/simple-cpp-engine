@@ -32,8 +32,6 @@ namespace Engine
 
 		/*  Keyboard */
 
-		static void SetMap(int key, int scancode, int action, int mods);
-
 		static bool IsKeyPressed(KeyCode key);
 
 		static bool IsKeyUp(KeyCode key);
@@ -50,8 +48,6 @@ namespace Engine
 
 		static float GetAxisStrength(uint8_t jid, GamePadAxisCode axis);
 
-		static void SetJoysticks(int id, int event);
-
 		static void SetDeadZone(int jid, float zone);
 
 		static void PrintJoysticksList();
@@ -59,6 +55,12 @@ namespace Engine
 		/* Mouse */
 
 		static Cursor GetCursorPosition();
+
+		static bool IsMouseButtonPressed(MouseCode btn);
+
+		static bool IsMouseButtonJustDown(MouseCode btn);
+
+		static bool IsMouseButtonUp(MouseCode btn);
 
 	private:
 

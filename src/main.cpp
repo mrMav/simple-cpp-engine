@@ -188,13 +188,31 @@ int main()
 
         //std::cout << glm::to_string(color) << std::endl;
 
+        
+
+        if (Input::IsMouseButtonJustDown(Mouse::MouseButtonMiddle))
+        {
+            std::cout << "mouse button just down" << std::endl;
+        }
+
+        if (Input::IsMouseButtonPressed(Mouse::MouseButtonLeft))
+        {
+            followMouse = true;
+        }
+
+        if (Input::IsMouseButtonUp(Mouse::MouseButtonRight))
+        {
+            scaleplus = -10;
+        }
+
+
         if (followMouse)
         {
             Cursor mousPos = Input::GetCursorPosition();
             squarePosition.x = mousPos.x;
             squarePosition.y = mousPos.y;
         }
-
+        
         squareTransform = glm::translate(squarePosition);
         squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
         squareTransform = glm::rotate(squareTransform, glm::radians(angle), glm::vec3(0, 0, 1));
