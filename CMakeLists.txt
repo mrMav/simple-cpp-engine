@@ -14,19 +14,21 @@ add_subdirectory(src/Engine/Render)
 add_subdirectory(src/Engine/Input)
 add_subdirectory(src/Engine/Utils)
 
+add_subdirectory(external)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC external/glfw/include
     PUBLIC external/glm
+    PUBLIC external/imgui
     PUBLIC external
     PUBLIC src/Engine
 )
 
-target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src)
+target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src PRIVATE external/imgui)
 
-target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} glfw imgui)
 
 #copy the shader source to the target folder
 set(SHADERS_SOURCE

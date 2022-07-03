@@ -12,6 +12,17 @@
 namespace Engine
 {
 
+	enum class GLErrorLogLevel
+	{
+		Notification = 0,
+		Low,
+		Medium,
+		High
+		
+	};
+
+	static GLErrorLogLevel GLLogLevel = GLErrorLogLevel::Notification;
+
 	// static class for checking gl errors
 	class GLUtils
 	{
@@ -38,6 +49,7 @@ namespace Engine
 			const char* _source;
 			const char* _type;
 			const char* _severity;
+			bool log = false;
 
 			switch (source) {
 			case GL_DEBUG_SOURCE_API:
@@ -106,34 +118,40 @@ namespace Engine
 			switch (severity) {
 			case GL_DEBUG_SEVERITY_HIGH:
 				_severity = "HIGH";
+				if (GLLogLevel <= GLErrorLogLevel::High) log = true;
 				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:
 				_severity = "MEDIUM";
+				if (GLLogLevel <= GLErrorLogLevel::Medium) log = true;
+
 				break;
 
 			case GL_DEBUG_SEVERITY_LOW:
 				_severity = "LOW";
+				if (GLLogLevel <= GLErrorLogLevel::Low) log = true;
 				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
 				_severity = "NOTIFICATION";
+				if (GLLogLevel <= GLErrorLogLevel::Notification) log = true;
+
 				break;
 
 			default:
+				log = true;
 				_severity = "UNKNOWN";
 				break;
 			}
 
-			std::ostringstream outputStream;
-			outputStream << id << ": " << _type << " of " << _severity << ", raised from " << _source << ":" << "\n";
-			outputStream << Utils::BreakString(msg, 64) << std::endl;
+			if (log)
+			{
+				std::ostringstream outputStream;
+				outputStream << id << ": " << _type << " of " << _severity << ", raised from " << _source << ":" << "\n";
+				outputStream << Utils::BreakString(msg, 64) << std::endl;
 
-			std::cout << outputStream.str() << std::endl;
-
-			/*printf("%d: %s of %s severity, raised from %s: %s\n",
-					id, _type, _severity, _source, msg);*/
-
+				std::cout << outputStream.str() << std::endl;
+			}
 		}
 
 
