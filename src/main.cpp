@@ -8,6 +8,11 @@
 
 #include "Engine/Engine.h"
 
+#define IMGUI_IMPL_OPENGL_LOADER_GLAD
+#include "imgui.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+
 using namespace Engine;
 
 int main()
@@ -49,6 +54,9 @@ int main()
     // is the data parameter of the callback, it can be useful for different
     // contexts but isn't necessary for our simple use case.
     glDebugMessageCallback(GLUtils::GLDebugMessageCallback, 0);
+
+    // set the log level
+    GLLogLevel = GLErrorLogLevel::Low;
     
     Input::Init(window);    
     
@@ -103,6 +111,21 @@ int main()
 
     float lastDown = 0;
     float bestTime = std::numeric_limits<float>::max();
+
+
+    /* imgui */
+    // from thhe examples folder
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io; // what
+
+    ImGui::StyleColorsDark();
+
+    //backends
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init(NULL);
+
+    bool show_demo_window = true;
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -199,13 +222,30 @@ int main()
         Input::PostUpdate();  // TODO: this function to be moved to application level
                           // must be called at the end of the gameloop, but before polling events
         
+
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        if (show_demo_window)
+            ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         glFlush();
+
         //glfwSwapBuffers(window);
         glfwPollEvents();
 
     }
 
     vb.Delete();
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
     glfwTerminate();
