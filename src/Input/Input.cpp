@@ -10,10 +10,12 @@
 
 namespace Engine
 {
+	
 	struct InputData
 	{
 		InputData() :
-			GamePadStates(GLFW_JOYSTICK_LAST + 1), LastGamePadStates(GLFW_JOYSTICK_LAST + 1)
+			GamePadStates(GLFW_JOYSTICK_LAST + 1), LastGamePadStates(GLFW_JOYSTICK_LAST + 1), CursorPosition({ 0, 0 }),
+			MouseButtonStates(GLFW_MOUSE_BUTTON_3 + 1), LastMouseButtonStates(GLFW_MOUSE_BUTTON_3 + 1)
 		{
 
 		}
@@ -29,28 +31,84 @@ namespace Engine
 		std::vector<GLFWgamepadstate> LastGamePadStates;
 		std::vector<GLFWgamepadstate> GamePadStates;
 
+		/* Mouse */
+		Cursor CursorPosition;
+		std::vector<MouseCode> LastMouseButtonStates;
+		std::vector<MouseCode> MouseButtonStates;
+
 		float DeadZone = 0;
 		float HalfDeadZone = 0;
 	};
 
 	static InputData m_InputData;
 
+	/* glfw callbacks */
+
 	void GLFWKeyInputCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		Input::SetMap(key, scancode, action, mods);
+		_ENGINE_PASS_OR_RETURN(key != GLFW_KEY_UNKNOWN);
+
+		if (action > GLFW_RELEASE)
+			m_InputData.KeyMap.set(key);
+		else
+			m_InputData.KeyMap.reset(key);
 	}
 
 	void GLFWJoystickCallback(int id, int event)
 	{
-		Input::SetJoysticks(id, event);			
+		if (event == GLFW_CONNECTED)
+		{
+			if (!glfwJoystickIsGamepad(id))
+			{
+				_ENGINE_LOG("INPUT", "Joystick not supported! (not gamepad mapping support)")
+					return;
+			}
+
+			m_InputData.Joysticks.push_back(id);
+
+			_ENGINE_LOG("INPUT", "Joystick connected!")
+
+		}
+		else if (event == GLFW_DISCONNECTED)
+		{
+			// https://en.wikipedia.org/wiki/Erase%E2%80%93remove_idiom
+			m_InputData.Joysticks.erase(std::remove(m_InputData.Joysticks.begin(), m_InputData.Joysticks.end(), id), m_InputData.Joysticks.end());
+
+			_ENGINE_LOG("INPUT", "Joystick disconnected!")
+		}
+
+		if (!glfwGetWindowAttrib(m_InputData.Window, GLFW_FOCUSED))
+			glfwRequestWindowAttention(m_InputData.Window);
 	}
+
+	void GLFWCursorCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		m_InputData.CursorPosition.x = static_cast<uint32_t>(xpos);
+		m_InputData.CursorPosition.y = static_cast<uint32_t>(ypos);
+
+		//std::cout << m_InputData.CursorPosition.ToString() << std::endl;
+	}
+
+	void GLFWMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+	{
+		_ENGINE_PASS_OR_RETURN(button <= GLFW_MOUSE_BUTTON_3);
+
+		m_InputData.MouseButtonStates[button] = action;
+		
+	}
+
+
+	/* Input */
 
 	void Input::Init(GLFWwindow* window)
 	{	
 		m_InputData.Window = window;
 
+		/* wiring glfw callbacks */
 		glfwSetKeyCallback(window, GLFWKeyInputCallback);
 		glfwSetJoystickCallback(GLFWJoystickCallback);
+		glfwSetCursorPosCallback(window, GLFWCursorCallback);
+		glfwSetMouseButtonCallback(window, GLFWMouseButtonCallback);
 
 		DetectConnectedJoysticks();
 
@@ -69,20 +127,12 @@ namespace Engine
 	{	
 		// bitsets copy faster than vectors
 		m_InputData.LastFrameKeyMap = std::bitset(m_InputData.KeyMap);
+
 		m_InputData.LastGamePadStates = std::vector(m_InputData.GamePadStates);
+		m_InputData.LastMouseButtonStates = std::vector(m_InputData.MouseButtonStates);
 	}
 
 	/* Keyboard */
-
-	void Input::SetMap(int key, int scancode, int action, int mods)
-	{		
-		_ENGINE_PASS_OR_RETURN(key != GLFW_KEY_UNKNOWN);
-
-		if (action > GLFW_RELEASE)
-			m_InputData.KeyMap.set(key);
-		else
-			m_InputData.KeyMap.reset(key);
-	}
 
 	bool Input::IsKeyPressed(KeyCode key)
 	{
@@ -153,33 +203,6 @@ namespace Engine
 		}
 	}
 
-	void Input::SetJoysticks(int id, int event)
-	{
-		if (event == GLFW_CONNECTED)
-		{
-			if (!glfwJoystickIsGamepad(id))
-			{
-				_ENGINE_LOG("INPUT", "Joystick not supported! (not gamepad mapping support)")
-				return;
-			}
-
-			m_InputData.Joysticks.push_back(id);
-
-			_ENGINE_LOG("INPUT", "Joystick connected!")
-
-		}
-		else if (event == GLFW_DISCONNECTED)
-		{
-			// https://en.wikipedia.org/wiki/Erase%E2%80%93remove_idiom
-			m_InputData.Joysticks.erase(std::remove(m_InputData.Joysticks.begin(), m_InputData.Joysticks.end(), id), m_InputData.Joysticks.end());
-			
-			_ENGINE_LOG("INPUT", "Joystick disconnected!")
-		}
-
-		if (!glfwGetWindowAttrib(m_InputData.Window, GLFW_FOCUSED))
-			glfwRequestWindowAttention(m_InputData.Window);
-	}
-
 	void Input::PrintJoysticksList()
 	{
 		std::string str;
@@ -194,5 +217,30 @@ namespace Engine
 
 		_ENGINE_LOG("INPUT", str)
 	}
+
+	/* Mouse */
+
+	Cursor Input::GetCursorPosition()
+	{
+		return m_InputData.CursorPosition;
+	}
+
+	bool Input::IsMouseButtonPressed(MouseCode btn)
+	{
+		return m_InputData.MouseButtonStates[btn] == GLFW_PRESS;
+	}
+		 
+	bool Input::IsMouseButtonJustDown(MouseCode btn)
+	{
+		return  m_InputData.LastMouseButtonStates[btn] == GLFW_RELEASE &&
+				m_InputData.MouseButtonStates[btn] == GLFW_PRESS;
+	}
+
+	bool Input::IsMouseButtonUp(MouseCode btn)
+	{
+		return m_InputData.MouseButtonStates[btn] == GLFW_RELEASE;
+	}
+
+
 
 }
