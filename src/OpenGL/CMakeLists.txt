@@ -11,7 +11,6 @@ set(HEADERS
 
 set(SOURCE
     ${SOURCE}
-    glad.c
     ShaderAttributes.cpp
 )
 
