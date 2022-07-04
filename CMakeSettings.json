@@ -25,6 +25,11 @@
           "name": "GLFW_BUILD_EXAMPLES",
           "value": "False",
           "type": "BOOL"
+        },
+        {
+          "name": "GLFW_INSTALL",
+          "value": "false",
+          "type": "BOOL"
         }
       ]
     },

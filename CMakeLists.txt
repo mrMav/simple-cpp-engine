@@ -32,11 +32,11 @@ target_link_libraries(${PROJECT_NAME} glfw imgui)
 
 #copy the shader source to the target folder
 set(SHADERS_SOURCE
-    ${CMAKE_SOURCE_DIR}/src/Shaders/vertex.vert
-    ${CMAKE_SOURCE_DIR}/src/Shaders/fragment.frag
+    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/vertex.vert
+    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
 )
 
-set(SHADERS_DIR ${CMAKE_CURRENT_BINARY_DIR}/Shaders)
+set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)
 
 add_custom_target(COPY_SHADERS
     COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERS_DIR}            
@@ -44,4 +44,4 @@ add_custom_target(COPY_SHADERS
     COMMENT "Copying shaders source files to build..."
 )
 
-add_dependencies(${PROJECT_NAME} COPY_SHADERS)
+add_dependencies(simple-cpp-engine COPY_SHADERS)

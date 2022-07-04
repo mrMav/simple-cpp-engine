@@ -21,3 +21,7 @@
 #include "Input/GamePadButtonCodes.h"
 
 #include "Utils/Utils.h"
+
+#include "imgui.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
