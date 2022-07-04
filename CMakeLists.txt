@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 set (CMAKE_CXX_STANDARD 17)
 
-project(new-game)
+project(simple-cpp-engine)
 
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCE})
 
