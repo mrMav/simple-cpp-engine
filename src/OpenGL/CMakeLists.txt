@@ -7,6 +7,7 @@ set(HEADERS
     ShaderAttributes.h
     GLUtils.h
     Shader.h
+    Texture2D.h
 )
 
 set(SOURCE

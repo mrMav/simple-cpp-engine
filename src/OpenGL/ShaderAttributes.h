@@ -141,5 +141,21 @@ namespace Engine
             
         }
     };
+
+    struct VertexPositionColorTexture
+    {
+        // init in ShaderAttributes.cpp
+        const static ShaderAttributes Attributes;
+
+        glm::vec3 Position;
+        glm::vec3 Color;
+        glm::vec2 Texture;
+
+        VertexPositionColorTexture(glm::vec3 pos, glm::vec3 color, glm::vec2 texture)
+            : Position(pos), Color(color), Texture(texture)
+        {
+
+        }
+    };
     
 }

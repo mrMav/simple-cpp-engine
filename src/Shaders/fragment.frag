@@ -1,11 +1,13 @@
 #version 460 core
 
 in vec3 vertexColor;
+in vec2 textureCoord;
 
 out vec4 FragColor;
 
 uniform vec4 uColor;
 uniform float uTime;
+uniform sampler2D texture1;
 
 // https://gist.github.com/mairod/a75e7b44f68110e1576d77419d608786
 vec3 hueShift( vec3 color, float hueAdjust ){
@@ -37,6 +39,7 @@ vec3 hueShift( vec3 color, float hueAdjust ){
 
 void main(){
 
-    FragColor = vec4(hueShift(vertexColor * uColor.xyz, uTime), uColor.a);
+    //FragColor = vec4(hueShift(vertexColor * uColor.xyz, uTime), uColor.a);
+    FragColor = texture(texture1, textureCoord);
 
 }

@@ -18,6 +18,8 @@ add_subdirectory(external)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
 
+add_subdirectory(engine-test)
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC external/glfw/include
     PUBLIC external/glm
@@ -34,6 +36,7 @@ target_link_libraries(${PROJECT_NAME} glfw imgui)
 set(SHADERS_SOURCE
     ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/vertex.vert
     ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
+    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/texture.png
 )
 
 set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)

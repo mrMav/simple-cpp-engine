@@ -38,5 +38,13 @@ namespace Engine
         }
     );
 
+    const ShaderAttributes VertexPositionColorTexture::Attributes = ShaderAttributes(
+        {
+            { AttributeType::Float3, sizeof(Position) },
+            { AttributeType::Float3, sizeof(Color)    },
+            { AttributeType::Float3, sizeof(Texture)  }
+        }
+    );
+
 
 }

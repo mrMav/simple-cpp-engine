@@ -11,6 +11,7 @@
 #include "OpenGL/Shader.h"
 #include "OpenGL/GLUtils.h"
 #include "OpenGL/ShaderAttributes.h"
+#include "OpenGL/Texture2D.h"
 
 #include "Render/Viewport.h"
 #include "Render/Camera2D.h"
