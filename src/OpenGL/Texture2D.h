@@ -46,7 +46,9 @@ namespace Engine
 			: m_Params(params)
 		{
 
-			stbi_set_flip_vertically_on_load(true);
+			//stbi_set_flip_vertically_on_load(true);
+			// no need to invert
+			// we will use top left for uv(0,0)
 
 			unsigned char* data = stbi_load(filename, &m_Width, &m_Height, &m_Channels, 0);
 

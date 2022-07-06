@@ -61,7 +61,23 @@ namespace Engine
                             m_Attributes->GetStride(), (void*)(attrib.Offset));
                         glEnableVertexAttribArray(m_AttribIndex);
                         m_AttribIndex++;
+
+                        break;
                     }
+                    case AttributeType::Float2:
+                    {
+                        // same as Float3, repeated code?
+
+                        glVertexAttribPointer(m_AttribIndex, attrib.GetComponentCount(),
+                            ShaderDataTypeToOpenGLBaseType(attrib.Type), attrib.Normalized ? GL_TRUE : GL_FALSE,
+                            m_Attributes->GetStride(), (void*)(attrib.Offset));
+                        glEnableVertexAttribArray(m_AttribIndex);
+                        m_AttribIndex++;                        
+                        
+                        break;
+
+                    }
+
                 }
 
             }

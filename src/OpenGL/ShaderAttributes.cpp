@@ -42,7 +42,7 @@ namespace Engine
         {
             { AttributeType::Float3, sizeof(Position) },
             { AttributeType::Float3, sizeof(Color)    },
-            { AttributeType::Float3, sizeof(Texture)  }
+            { AttributeType::Float2, sizeof(Texture)  }
         }
     );
 

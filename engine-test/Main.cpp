@@ -61,11 +61,13 @@ int main()
 
     std::vector<VertexPositionColorTexture> vertexDataSquare =
     {
-        VertexPositionColorTexture{glm::vec3(-25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f), glm::vec2(0, 1)},
-        VertexPositionColorTexture{glm::vec3(25,   25, 0), glm::vec3(0.906f,0.235f, 0.0f),  glm::vec2(1, 1)},
-        VertexPositionColorTexture{glm::vec3(25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f),  glm::vec2(1, 0)},
-        VertexPositionColorTexture{glm::vec3(-25,  -25, 0), glm::vec3(0.906f,0.235f, 0.0f), glm::vec2(0, 0)}
+        VertexPositionColorTexture{glm::vec3(-25,  -25, 0), glm::vec3(1.0f,0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+        VertexPositionColorTexture{glm::vec3( 25,  -25, 0), glm::vec3(0.0f,1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+        VertexPositionColorTexture{glm::vec3(-25,   25, 0), glm::vec3(0.0f,0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+        VertexPositionColorTexture{glm::vec3( 25,   25, 0), glm::vec3(0.5f,0.5f, 0.0f), glm::vec2(1.0f, 1.0f)}
     };
+
+    VertexPositionColorTexture::Attributes.PrintAttribs();
 
     std::vector<uint16_t> triangleIndices =
     {
@@ -75,10 +77,11 @@ int main()
     std::vector<uint16_t> squareIndices =
     {
         0, 1, 2,
-        0, 2, 3
+        2, 1, 3
     };
 
     Shader shader("../Shaders/vertex.vert", "../Shaders/fragment.frag");
+    shader.use();
     Texture2D texture("../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});    
 
     VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColorTexture));
@@ -97,6 +100,7 @@ int main()
     float delta;
     float angle = 0;
     float scaleplus = 0;
+    float squareScale = 6.0f;
     glm::vec4 color = glm::vec4(1, 1, 1, 1);
 
     float deadzone = 0.21f; // I blame Rocket League
@@ -118,11 +122,16 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(NULL);
 
-    bool show_demo_window = true;
+    bool show_demo_window = false;
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.392, 0.584, 0.929, 1);
+    
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+    
 
     while (!glfwWindowShouldClose(window))
     {
@@ -203,9 +212,13 @@ int main()
         //std::cout << glm::to_string(color) << std::endl;
 
         squareTransform = glm::translate(squarePosition);
-        squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
-        squareTransform = glm::rotate(squareTransform, glm::radians(angle), glm::vec3(0, 0, 1));
+        squareTransform = glm::scale(squareTransform, glm::vec3(squareScale));
+        //squareTransform = glm::scale(squareTransform, glm::vec3((sin(time) + 2) * 1.5 + scaleplus));
+        //squareTransform = glm::rotate(squareTransform, glm::radians(angle), glm::vec3(0, 0, 1));
         scaleplus *= 0.999;
+
+        glActiveTexture(GL_TEXTURE0);
+        texture.Bind();
 
         shader.use();
         shader.setVec4("uColor", color);
@@ -228,6 +241,10 @@ int main()
 
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
+
+        ImGui::Begin("Debug Variables");
+        ImGui::SliderFloat("Square Scale", &squareScale, 1, 100, NULL, 1);
+        ImGui::End();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
