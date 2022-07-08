@@ -13,12 +13,10 @@ namespace Engine
 	{
 	public:
 
-		VertexBuffer(const void* data, const size_t dataSize)
-			: m_Data(data), m_DataSize(dataSize)
+		VertexBuffer()
 		{
 			glGenBuffers(1, &m_Handle);
 			Bind();
-			SetData(m_Data, m_DataSize);
 
 		}
 		~VertexBuffer() {};

@@ -13,6 +13,7 @@ set(HEADERS
 set(SOURCE
     ${SOURCE}
     ShaderAttributes.cpp
+    Texture2D.cpp
 )
 
 target_sources(${PROJECT_NAME} 

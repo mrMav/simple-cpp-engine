@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "ShaderAttributes.h"
 
 namespace Engine
@@ -17,8 +19,12 @@ namespace Engine
         VertexArray(const ShaderAttributes* attribs)
             : m_Attributes(attribs)
         {
+            m_VertexBuffer = VertexBuffer();
+            m_IndexBuffer = IndexBuffer();
+
             glGenVertexArrays(1, &m_Handle);
             Bind();
+
             SetAttributes();
         }
 
@@ -29,6 +35,18 @@ namespace Engine
             glBindVertexArray(m_Handle);
         }
 
+        void SetVertices(const void* data, size_t size)
+        {
+            m_VertexBuffer.Bind();
+            m_VertexBuffer.SetData(data, size);
+        }
+
+        void SetIndices(const void* data, size_t size)
+        {
+            m_IndexBuffer.Bind();
+            m_IndexBuffer.SetData(data, size);
+        }
+
         void Unbind() const
         {
             glBindVertexArray(0);
@@ -36,12 +54,26 @@ namespace Engine
 
         void Delete()
         {
+            m_IndexBuffer.Delete();
+            m_VertexBuffer.Delete();
             glDeleteBuffers(1, &m_Handle);
+        }
+
+        void DrawElements()
+        {
+            Bind();
+            m_VertexBuffer.Bind();  // TODO: check all this binding need and order
+            m_IndexBuffer.Bind();
+            glDrawElements(GL_TRIANGLES, m_IndexBuffer.GetDataCount(), GL_UNSIGNED_SHORT, 0);
         }
 
     private:
     
         GLuint m_Handle;
+
+        VertexBuffer m_VertexBuffer;
+
+        IndexBuffer m_IndexBuffer;
 
         uint8_t m_AttribIndex = 0;
 

@@ -37,6 +37,7 @@ set(SHADERS_SOURCE
     ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/vertex.vert
     ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
     ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/texture.png
+    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/dude1.png
 )
 
 set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)

@@ -156,6 +156,13 @@ namespace Engine
         {
 
         }
+
+        VertexPositionColorTexture()
+        {
+            Position = glm::vec3(0);
+            Color    = glm::vec3(0);
+            Texture  = glm::vec2(0);
+        }
     };
     
 }
