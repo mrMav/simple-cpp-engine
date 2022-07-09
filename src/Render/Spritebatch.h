@@ -10,10 +10,26 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#define MAX_BATCH_ITEMS 256
+#define MAX_BATCH_ITEMS 512
 
 namespace Engine
 {
+
+	struct BatchStats
+	{
+		uint32_t ItemCount;
+		uint32_t TotalVertices;
+		uint32_t TotalTriangles;
+		uint32_t Flushs;
+
+		void Reset()
+		{
+			ItemCount = 0;
+			TotalVertices = 0;
+			TotalTriangles = 0;
+			Flushs = 0;
+		}
+	};
 
 	class Spritebatch
 	{
@@ -34,6 +50,8 @@ namespace Engine
 		void End();
 
 		void Draw(Texture2D* texture, uint32_t x, uint32_t y);
+
+		const BatchStats& GetStats() const { return m_Stats;  }
 
 	private:
 
@@ -57,7 +75,11 @@ namespace Engine
 
 		uint32_t m_BatchItemIndex = 0;
 
+		BatchStats m_Stats;
+
 		bool m_BeginCalled = false;
+
+
 
 	};
 

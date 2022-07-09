@@ -80,10 +80,10 @@ int main()
         2, 1, 3
     };
 
-    Shader shader("../Shaders/vertex.vert", "../Shaders/fragment.frag");
+    Shader shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
     shader.use();
-    Texture2D texture("../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
-    Texture2D dude("../Shaders/dude1.png", {});
+    Texture2D texture("../../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
+    Texture2D dude("../../Shaders/dude1.png", {});
 
     Spritebatch spritebatch;
 
@@ -237,9 +237,12 @@ int main()
 
         spritebatch.Begin(&shader, &camera, 1);
         
-        for (int i = 0; i < 200; i++)
+        for (int y = 0; y < 20; y++)
         {
-            spritebatch.Draw(&dude, i * 10, i * 10);
+            for (int x = 0; x < 20; x++)
+            {
+                spritebatch.Draw(&dude, x * 24, y * 24);
+            }
         }
 
         spritebatch.End();
@@ -247,9 +250,7 @@ int main()
         /* */
 
         Input::PostUpdate();  // TODO: this function to be moved to application level
-                          // must be called at the end of the gameloop, but before polling events
-
-
+                              // must be called at the end of the gameloop, but before polling events
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -260,6 +261,7 @@ int main()
 
         ImGui::Begin("Debug Variables");
         ImGui::SliderFloat("Square Scale", &squareScale, 1, 100, NULL, 1);
+        ImGui::SliderFloat("Camera Zoom", &(camera.Zoom), -10, 10, NULL, 1);
         ImGui::SliderFloat3("Camera Position", &(camera.Position[0]), -100, 100, NULL, 1);
         ImGui::End();
 

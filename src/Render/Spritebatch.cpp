@@ -40,6 +40,7 @@ namespace Engine
 		m_Camera = camera;
 
 		Reset();
+		m_Stats.Reset();
 
 		m_BeginCalled = true;
 
@@ -58,6 +59,7 @@ namespace Engine
 		Flush();
 
 		m_Shader = nullptr;
+		m_Camera = nullptr;
 		m_BeginCalled = false;
 
 	}
@@ -67,24 +69,32 @@ namespace Engine
 
 		_ENGINE_FAIL_MESSAGE(m_BeginCalled, "Spritebatch.Begin() was not called!")
 
+		FlushIfNeeded();
+
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y);
 
-		FlushIfNeeded();
+		m_Stats.ItemCount++;
 
 	}
 
 	void Spritebatch::FlushIfNeeded()
 	{
+
 		if (m_BatchItemIndex + 1 == MAX_BATCH_ITEMS)
 		{
+			_ENGINE_LOG("SPRITEBATCH", "FLUSH NEEDED!")
+
 			Flush();
+			Reset();
 		}
 	}
 
 	void Spritebatch::Flush()
 	{
+
+		m_Stats.Flushs++;
 
 		Texture2D* currentTexture = m_BatchItems[0].texture;
 
@@ -94,6 +104,9 @@ namespace Engine
 			*(m_VerticesPtr + 1) = m_BatchItems[i].vertexTR;
 			*(m_VerticesPtr + 2) = m_BatchItems[i].vertexBR;
 			*(m_VerticesPtr + 3) = m_BatchItems[i].vertexBL;
+
+			m_Stats.TotalVertices += 4;
+			m_Stats.TotalTriangles += 2;
 
 			if (m_BatchItems[i].texture != currentTexture)
 			{
