@@ -136,6 +136,9 @@ int main()
 
     bool show_demo_window = true;
         
+
+    float angle2 = 0.0f;
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -157,13 +160,21 @@ int main()
         
         /* test spritebatch */
 
+        float angle = 0.0f;
+        angle2 += 45.0f * delta;
+
         spritebatch.Begin(&shader, &camera, 1);
         
+        //spritebatch.Draw(&texture, 0, 0, glm::radians(angle2));
+
         for (int y = 0; y < 40; y++)
         {
             for (int x = 0; x < 40; x++)
             {
-                spritebatch.Draw(&dude, x * 24, y * 24);
+                angle++;
+
+                //spritebatch.Draw(&dude, x * 24, y * 24);
+                spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
             }
         }
 

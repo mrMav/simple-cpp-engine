@@ -81,6 +81,19 @@ namespace Engine
 
 	}
 
+	void Spritebatch::Draw(Texture2D* texture, uint32_t x, uint32_t y, float angle, float originX, float originY)
+	{
+
+		FlushIfNeeded();
+
+		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
+		item->texture = texture;
+		item->Set(x, y, originX, originY, angle);
+
+		m_Stats.ItemCount++;
+
+	}
+
 	void Spritebatch::FlushIfNeeded()
 	{
 

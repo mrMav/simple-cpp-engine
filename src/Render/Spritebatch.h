@@ -50,6 +50,7 @@ namespace Engine
 		void End();
 
 		void Draw(Texture2D* texture, uint32_t x, uint32_t y);
+		void Draw(Texture2D* texture, uint32_t x, uint32_t y, float angle, float originX = 0.5f, float originY = 0.5f);
 
 		const BatchStats& GetStats() const { return m_Stats;  }
 

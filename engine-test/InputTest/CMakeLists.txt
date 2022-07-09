@@ -1,7 +1,7 @@
 
 set(TESTNAME input-test)
 
-add_executable(${TESTNAME} ${HEADERS} ${SOURCE} InputTest.cpp)
+add_executable(${TESTNAME} InputTest.cpp)
 
 target_include_directories(${TESTNAME}
     PUBLIC ../../src

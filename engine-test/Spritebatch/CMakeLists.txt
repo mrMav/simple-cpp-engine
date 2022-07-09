@@ -1,7 +1,7 @@
 
 set(TESTNAME spritebatch-test)
 
-add_executable(${TESTNAME} ${HEADERS} ${SOURCE} Spritebatch.cpp)
+add_executable(${TESTNAME} SpritebatchTest.cpp)
 
 target_include_directories(${TESTNAME}
     PUBLIC ../../src
