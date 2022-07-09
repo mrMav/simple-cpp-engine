@@ -91,7 +91,7 @@ int main()
     va.SetVertices(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColorTexture));
     va.SetIndices(&(squareIndices[0]), squareIndices.size());
 
-    Viewport viewport(gameWidth / 2.0f, gameHeight / 2.0f);
+    Viewport viewport(gameWidth, gameHeight);
     viewport.Set();
 
     Camera2D camera(viewport);
