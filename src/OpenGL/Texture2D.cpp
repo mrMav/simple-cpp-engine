@@ -26,11 +26,11 @@ namespace Engine
 		if (data)
 		{
 
-			//glActiveTexture(GL_TEXTURE0);
-
+			GLuint format = m_Channels == 4 ? GL_RGBA : GL_RGB;
+			
 			glGenTextures(1, &m_Texture);
 			glBindTexture(GL_TEXTURE_2D, m_Texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, m_Channels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, format, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
 
 			if (m_Params.GenMipmaps)
 			{
