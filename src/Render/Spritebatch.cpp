@@ -21,7 +21,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 
 		uint32_t offset = 0;
-		for (int i = 1; i <= MAX_BATCH_ITEMS; i++, m_IndicesPtr += 6, offset += 6)
+		for (int i = 0; i < MAX_BATCH_ITEMS; i++, m_IndicesPtr += 6, offset += 6)
 		{
 			*(m_IndicesPtr + 0) = (i * 4 + 0);
 			*(m_IndicesPtr + 1) = (i * 4 + 1);
@@ -36,6 +36,8 @@ namespace Engine
 
 	void Spritebatch::Begin(Shader* shader, Camera2D* camera, uint16_t depth = 0)
 	{
+		_ENGINE_FAIL_WITH_MSG(!m_BeginCalled, "Spritebatch.Begin() was called, but Spritebatch.End() was never called!")
+
 		m_Shader = shader;
 		m_Camera = camera;
 
@@ -56,6 +58,8 @@ namespace Engine
 
 	void Spritebatch::End()
 	{
+		_ENGINE_FAIL_WITH_MSG(m_BeginCalled, "Spritebatch.Begin() was not called!")
+
 		Flush();
 
 		m_Shader = nullptr;
@@ -66,8 +70,6 @@ namespace Engine
 
 	void Spritebatch::Draw(Texture2D* texture, uint32_t x, uint32_t y)
 	{
-
-		_ENGINE_FAIL_MESSAGE(m_BeginCalled, "Spritebatch.Begin() was not called!")
 
 		FlushIfNeeded();
 

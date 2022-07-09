@@ -159,9 +159,9 @@ int main()
 
         spritebatch.Begin(&shader, &camera, 1);
         
-        for (int y = 0; y < 20; y++)
+        for (int y = 0; y < 40; y++)
         {
-            for (int x = 0; x < 20; x++)
+            for (int x = 0; x < 40; x++)
             {
                 spritebatch.Draw(&dude, x * 24, y * 24);
             }
