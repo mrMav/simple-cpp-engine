@@ -144,6 +144,12 @@ int main()
 
     float angle2 = 0.0f;
 
+    double lastFrameSeconds = 0;
+    double renderLoopDeltaSeconds = 0;
+    double peak = 0;
+
+    glfwSetTime(0);
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -152,8 +158,8 @@ int main()
 
         camera.Update(0.0f);
 
+        double newTime = glfwGetTime();
         // update square transform
-        float newTime = glfwGetTime();
         delta = newTime - time;
         time = glfwGetTime();
         
@@ -184,9 +190,9 @@ int main()
         
         //spritebatch.Draw(&texture, 0, 0, glm::radians(angle2));
 
-        for (int y = 0; y < 100; y++)
+        for (int y = 0; y < 150; y++)
         {
-            for (int x = 0; x < 100; x++)
+            for (int x = 0; x < 150; x++)
             {
                 angle++;
 
@@ -245,6 +251,7 @@ int main()
             ImGui::Text("Triangles: %i", spritebatch.GetStats().TotalTriangles);
             ImGui::Text("Vertices: %i", spritebatch.GetStats().TotalVertices);
             ImGui::Text("Flushs: %i", spritebatch.GetStats().Flushs);
+            
             ImGui::Separator();
 
             glm::vec2 worldpos = camera.ScreenToWorld(Input::GetCursorPosition().x, Input::GetCursorPosition().y);
@@ -253,6 +260,11 @@ int main()
             ImGui::Text("Mouse Screen Position: (x: %i, y: %i)", Input::GetCursorPosition().x, Input::GetCursorPosition().y);
             ImGui::Text("Mouse World Position(x: %i, y: %i)", (int)worldpos.x, (int)worldpos.y);
             ImGui::Text("Zoom: %f", camera.Zoom);
+
+            ImGui::Separator();
+
+            ImGui::Text("delta t (ms): %.2f", renderLoopDeltaSeconds * 1000);
+            ImGui::Text(" peak t (ms): %.2f", peak * 1000);
 
         }
         ImGui::End();
@@ -265,6 +277,11 @@ int main()
 
         //glfwSwapBuffers(window);
         glfwPollEvents();
+
+        renderLoopDeltaSeconds = glfwGetTime() - lastFrameSeconds;
+        peak = renderLoopDeltaSeconds > peak ? renderLoopDeltaSeconds : peak;
+        lastFrameSeconds = glfwGetTime();
+
 
     }
 
