@@ -15,14 +15,20 @@ namespace Engine
 	public:
 
 		glm::vec3 Position;
+		float Zoom;
 
 		Camera2D(const Viewport&);
 		~Camera2D() { };
 
 		void Update(float gameTime);
 
+		glm::vec2 ScreenToWorld(glm::vec2& pos);
+		glm::vec2 ScreenToWorld(int x, int y);
+		glm::vec2 WorldToScreen(glm::vec2& pos);
+		glm::vec2 WorldToScreen(int x, int y);
+
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }
-		glm::mat4 GetProjectionViewTransform() const { return m_ProjectionViewTransform; }
+		glm::mat4 GetProjectionTransform() const { return m_ProjectionTransform; }
 
 	private:
 
@@ -30,11 +36,8 @@ namespace Engine
 
 		glm::mat4 m_ViewTransform;
 		glm::mat4 m_ProjectionTransform;
-		glm::mat4 m_ProjectionViewTransform;
 
 		const Viewport& m_Viewport;
-
-		void UpdateViewTransform();
 
 	};
 

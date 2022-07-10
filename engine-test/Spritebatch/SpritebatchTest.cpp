@@ -163,14 +163,17 @@ int main()
         camera.Position.y += Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftY) * speed * delta;
         
                         
-        /*if (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) > -1.0f)
+        if (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) > -1.0f)
         {
-            camera.Zoom -= max(0.0f, (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) + 1)) * zoomSpeed * delta;
+            camera.Zoom -= max(0.0f, (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisLeftTrigger) + 1)) * (camera.Zoom / zoomSpeed) * delta;
         }
         if (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) > -1.0f)
         {        
-            camera.Zoom += max(0.0f, (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) + 1)) * zoomSpeed * delta;
-        }*/
+            camera.Zoom += max(0.0f, (Input::GetAxisStrength(0, GamePadAxis::GamePadAxisRightTrigger) + 1)) * (camera.Zoom / zoomSpeed) * delta;
+        }
+
+        // clamp zoom
+        camera.Zoom = max(0.02f, min(30.0f, camera.Zoom));
                 
         /* test spritebatch */
 
@@ -181,14 +184,14 @@ int main()
         
         //spritebatch.Draw(&texture, 0, 0, glm::radians(angle2));
 
-        for (int y = 0; y < 1; y++)
+        for (int y = 0; y < 100; y++)
         {
-            for (int x = 0; x < 1; x++)
+            for (int x = 0; x < 100; x++)
             {
                 angle++;
 
-                spritebatch.Draw(&dude, x * 24, y * 24);
-                //spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
+                //spritebatch.Draw(&dude, x * 24, y * 24);
+                spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
             }
         }
 
@@ -230,9 +233,11 @@ int main()
 
             
         }
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
             
         ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(320, 0));
         if (ImGui::Begin("Example: Simple overlay", &stats, window_flags))
         {
             ImGui::Text("Spritebatch Stats:");
@@ -241,16 +246,13 @@ int main()
             ImGui::Text("Vertices: %i", spritebatch.GetStats().TotalVertices);
             ImGui::Text("Flushs: %i", spritebatch.GetStats().Flushs);
             ImGui::Separator();
+
+            glm::vec2 worldpos = camera.ScreenToWorld(Input::GetCursorPosition().x, Input::GetCursorPosition().y);
+
             ImGui::Text("Camera Position: (x: %i, y: %i)", (int)camera.Position.x, (int)camera.Position.y);
             ImGui::Text("Mouse Screen Position: (x: %i, y: %i)", Input::GetCursorPosition().x, Input::GetCursorPosition().y);
-
-            //glm::vec4 worldpos = glm::vec4(Input::GetCursorPosition().x, Input::GetCursorPosition().y, 0.0f, 1.0f) * camera.GetViewTransform();
-            //glm::vec3 worldpos = glm::vec3(Input::GetCursorPosition().x, Input::GetCursorPosition().y, 0.0f) + camera.Position;
-
-            //glm::vec2 worldpos = camera.GetScreenToWorld(Input::GetCursorPosition().x, Input::GetCursorPosition().y);
-
-            //ImGui::Text("Mouse World Position(x: %i, y: %i)", (int)worldpos.x, (int)worldpos.y);
-            //ImGui::Text("Zoom: %f", camera.Zoom);
+            ImGui::Text("Mouse World Position(x: %i, y: %i)", (int)worldpos.x, (int)worldpos.y);
+            ImGui::Text("Zoom: %f", camera.Zoom);
 
         }
         ImGui::End();

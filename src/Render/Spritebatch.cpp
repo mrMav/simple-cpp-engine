@@ -143,7 +143,7 @@ namespace Engine
 		m_Shader->use();
 		m_Shader->setMat4("uModel", glm::mat4(1));
 		m_Shader->setMat4("uView", m_Camera->GetViewTransform());
-		m_Shader->setMat4("uProjection", m_Camera->GetProjectionViewTransform());
+		m_Shader->setMat4("uProjection", m_Camera->GetProjectionTransform());
 
 		// calculate how many vertices we are drawing
 		uint32_t vertCount = m_VerticesPtr - m_Vertices;
