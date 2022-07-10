@@ -99,8 +99,6 @@ namespace Engine
 
 		if (m_BatchItemIndex + 1 == MAX_BATCH_ITEMS)
 		{
-			_ENGINE_LOG("SPRITEBATCH", "FLUSH NEEDED!")
-
 			Flush();
 			Reset();
 		}
