@@ -80,21 +80,25 @@ int main()
         2, 1, 3
     };
 
-    Shader shader("../Shaders/vertex.vert", "../Shaders/fragment.frag");
+    Shader shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
     shader.use();
-    Texture2D texture("../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});    
+    Texture2D texture("../../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
+    Texture2D dude("../../Shaders/dude1.png", {});
 
-    VertexBuffer vb = VertexBuffer(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColorTexture));
+    Spritebatch spritebatch;
+
     VertexArray va(&VertexPositionColorTexture::Attributes);
-    IndexBuffer ib = IndexBuffer(&squareIndices[0], squareIndices.size());
+    va.SetVertices(&(vertexDataSquare[0]), vertexDataSquare.size() * sizeof(VertexPositionColorTexture));
+    va.SetIndices(&(squareIndices[0]), squareIndices.size());
 
     Viewport viewport(gameWidth, gameHeight);
     viewport.Set();
 
     Camera2D camera(viewport);
+    camera.Position.z = 1;
 
     glm::mat4 squareTransform(1.0f);
-    glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, 0.0f);
+    glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, -1.0f);
 
     float time = 0;
     float delta;
@@ -132,7 +136,6 @@ int main()
     glCullFace(GL_BACK);
     glFrontFace(GL_CW);
     
-
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -227,13 +230,27 @@ int main()
         shader.setMat4("uView", camera.GetViewTransform());
         shader.setMat4("uProjection", camera.GetProjectionViewTransform());
 
-        va.Bind();
-        glDrawElements(GL_TRIANGLES, ib.GetDataCount(), GL_UNSIGNED_SHORT, 0);
+        va.DrawElements();        
+
+
+        /* test spritebatch */
+
+        spritebatch.Begin(&shader, &camera, 1);
+        
+        for (int y = 0; y < 20; y++)
+        {
+            for (int x = 0; x < 20; x++)
+            {
+                spritebatch.Draw(&dude, x * 24, y * 24);
+            }
+        }
+
+        spritebatch.End();
+
+        /* */
 
         Input::PostUpdate();  // TODO: this function to be moved to application level
-                          // must be called at the end of the gameloop, but before polling events
-
-
+                              // must be called at the end of the gameloop, but before polling events
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -244,6 +261,8 @@ int main()
 
         ImGui::Begin("Debug Variables");
         ImGui::SliderFloat("Square Scale", &squareScale, 1, 100, NULL, 1);
+        ImGui::SliderFloat("Camera Zoom", &(camera.Zoom), -10, 10, NULL, 1);
+        ImGui::SliderFloat3("Camera Position", &(camera.Position[0]), -100, 100, NULL, 1);
         ImGui::End();
 
         ImGui::Render();
@@ -256,7 +275,7 @@ int main()
 
     }
 
-    vb.Delete();
+    va.Delete();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

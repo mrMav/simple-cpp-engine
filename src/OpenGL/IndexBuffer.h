@@ -14,17 +14,14 @@ namespace Engine
 
 	public:
 
-		IndexBuffer(const void* data, const size_t count)
-			: m_Data(data), m_DataCount(count)
+		IndexBuffer()
 		{
 			// class constructor
 			// creates the handles for gl objects
 
 			glGenBuffers(1, &m_Handle);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Handle);
+			Bind();
 
-			// sends the data to gpu
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_DataCount * sizeof(uint16_t), data, GL_STATIC_DRAW);
 		}
 		~IndexBuffer() {};
 
@@ -32,6 +29,14 @@ namespace Engine
 		{
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Handle);
 		};
+
+		void SetData(const void* data, const size_t count)
+		{
+			m_DataCount = count;
+
+			// sends the data to gpu
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_DataCount * sizeof(uint16_t), data, GL_STATIC_DRAW);
+		}
 
 		void Unbind() const
 		{
