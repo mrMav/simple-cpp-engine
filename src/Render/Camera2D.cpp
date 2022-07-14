@@ -27,7 +27,8 @@ namespace Engine
 		//m_ViewTransform = position * scale;// this works wonders
 
 		// but I want to try and scale with reference point
-		m_ViewTransform = halfScreen * scale * glm::inverse(halfScreen) * position; // this scales towrds the center of the screen
+		//m_ViewTransform = halfScreen * scale * glm::inverse(halfScreen) * position; // this scales towrds the center of the screen
+		m_ViewTransform = halfScreen * scale * glm::inverse(halfScreen) * position * halfScreen; // this scales towrds the center of the screen
 	}
 
 	glm::vec2 Camera2D::ScreenToWorld(int x, int y)

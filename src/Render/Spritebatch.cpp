@@ -34,7 +34,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 	}
 
-	void Spritebatch::Begin(Shader* shader, Camera2D* camera, uint16_t depth = 0)
+	void Spritebatch::Begin(Shader* shader, Camera2D* camera, int16_t depth = 0)
 	{
 		_ENGINE_FAIL_WITH_MSG(!m_BeginCalled, "Spritebatch.Begin() was called, but Spritebatch.End() was never called!")
 
@@ -68,7 +68,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, uint32_t x, uint32_t y)
+	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y)
 	{
 
 		FlushIfNeeded();
@@ -81,7 +81,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, uint32_t x, uint32_t y, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, float angle, float originX, float originY)
 	{
 
 		FlushIfNeeded();
@@ -92,6 +92,29 @@ namespace Engine
 
 		m_Stats.ItemCount++;
 
+	}
+
+	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect)
+	{
+		FlushIfNeeded();
+
+		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
+		item->texture = texture;
+		item->Set(x, y, clipRect);
+
+		m_Stats.ItemCount++;
+
+	}
+
+	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect, float angle, float originX, float originY)
+	{
+		FlushIfNeeded();
+
+		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
+		item->texture = texture;
+		item->Set(x, y, clipRect, originX, originY, angle);
+
+		m_Stats.ItemCount++;
 	}
 
 	void Spritebatch::FlushIfNeeded()

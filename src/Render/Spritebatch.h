@@ -6,6 +6,7 @@
 
 #include "Camera2D.h"
 #include "SpritebatchItem.h"
+#include "Utils/Rectangle.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -45,12 +46,14 @@ namespace Engine
 			m_VertexArray->Delete();
 		};
 
-		void Begin(Shader* shader, Camera2D* camera, uint16_t depth);
+		void Begin(Shader* shader, Camera2D* camera, int16_t depth);
 
 		void End();
 
-		void Draw(Texture2D* texture, uint32_t x, uint32_t y);
-		void Draw(Texture2D* texture, uint32_t x, uint32_t y, float angle, float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, int32_t x, int32_t y);
+		void Draw(Texture2D* texture, int32_t x, int32_t y, float angle, float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect);
+		void Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect, float angle, float originX = 0.5f, float originY = 0.5f);
 
 		const BatchStats& GetStats() const { return m_Stats;  }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #define _ENGINE_PASS_OR_RETURN(x) if (!(x)) { return; } else {};
 #define _ENGINE_FAIL_WITH_MSG(x, message)	\
 if (!(x))                          \
