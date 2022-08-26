@@ -35,7 +35,7 @@ namespace Engine
 		return ScreenToWorld(glm::vec2(x, y));
 	}
 
-	glm::vec2 Camera2D::ScreenToWorld(glm::vec2& pos)
+	glm::vec2 Camera2D::ScreenToWorld(const glm::vec2& pos)
 	{
 		return (glm::inverse(m_ViewTransform) * glm::vec4(pos, 0, 1));
 	}
@@ -45,7 +45,7 @@ namespace Engine
 		return WorldToScreen(glm::vec2(x, y));
 	}
 
-	glm::vec2 Camera2D::WorldToScreen(glm::vec2& pos)
+	glm::vec2 Camera2D::WorldToScreen(const glm::vec2& pos)
 	{
 		return (m_ViewTransform * glm::vec4(pos, 0, 1));
 	}
