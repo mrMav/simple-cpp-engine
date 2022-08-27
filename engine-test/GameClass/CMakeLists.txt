@@ -1,7 +1,7 @@
 
 set(TESTNAME game-class)
 
-add_executable(${TESTNAME} GameClass.cpp)
+add_executable(${TESTNAME} GameClass.cpp TestGame.h)
 
 target_include_directories(${TESTNAME}
     PUBLIC ../../src

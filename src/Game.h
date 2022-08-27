@@ -3,6 +3,8 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
+#include "Render/Viewport.h"
+
 namespace Engine
 {
 
@@ -19,8 +21,8 @@ namespace Engine
             void virtual Render(float delta);
             void Shutdown();
 
-            uint32_t GetScreenWidth()  { return m_screenWidth;  }
-            uint32_t GetScreenHeight() { return m_screenHeight; }
+            Viewport& GetViewport() { return m_viewport; }
+            
 
         private:
             
@@ -31,6 +33,8 @@ namespace Engine
 
             GLFWwindow* m_windowHandle;
             std::string m_windowTitle;
+
+            Viewport m_viewport;
 
     };
 

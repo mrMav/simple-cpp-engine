@@ -20,6 +20,9 @@ namespace Engine
             m_windowTitle = windowTitle;
         else
             m_windowTitle = "New Game";
+
+        m_viewport = Viewport(screenWidth, screenHeight);
+
     }
 
     void Game::Run()
@@ -43,8 +46,12 @@ namespace Engine
             Update(delta);
             Render(delta);
 
+            // TODO: be moved to rendering class
             glFlush();
 
+            Input::PostUpdate();  // TODO: this function to be moved to application level
+                                  // must be called at the end of the gameloop, but before polling events
+ 
             //glfwSwapBuffers(window);
             glfwPollEvents();
 
@@ -120,6 +127,7 @@ namespace Engine
         // initiates the state of the input system
         Input::Init(m_windowHandle);
 
+        m_viewport.Set();
 
         /* imgui */
         // TODO: Move to a imgui wrapper class?
