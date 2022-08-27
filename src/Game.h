@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 namespace Engine
@@ -9,12 +10,13 @@ namespace Engine
     {
         public:
 
-            Game(uint32_t screenWith, uint32_t screenHeight, char* windowTitle);
-            ~Game();
+            Game(uint32_t screenWidth, uint32_t screenHeight, const char* windowTitle);
+            ~Game() { };
 
-            void Run();
-            void Update(float delta);
-            void Render(float delta);
+            void virtual Run();
+            void virtual Load();
+            void virtual Update(float delta);
+            void virtual Render(float delta);
             void Shutdown();
 
             uint32_t GetScreenWidth()  { return m_screenWidth;  }

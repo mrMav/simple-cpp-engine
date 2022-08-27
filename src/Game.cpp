@@ -13,8 +13,8 @@
 namespace Engine
 {
 
-    Game::Game(uint32_t screenWidth, uint32_t screenHeight, char* windowTitle)
-        : m_screenWidth(screenWidth), m_screenHeight(m_screenHeight)
+    Game::Game(uint32_t screenWidth, uint32_t screenHeight, const char* windowTitle)
+        : m_screenWidth(screenWidth), m_screenHeight(screenHeight)
     {
         if(windowTitle)
             m_windowTitle = windowTitle;
@@ -25,6 +25,7 @@ namespace Engine
     void Game::Run()
     {
         Init();
+        Load();
 
         // start the game loop here:
         
@@ -47,7 +48,15 @@ namespace Engine
             //glfwSwapBuffers(window);
             glfwPollEvents();
 
-        }   
+        }
+
+        // shutdown all systems
+        Shutdown();
+
+    }
+
+    void Game::Load()
+    {
 
     }
 
@@ -140,7 +149,12 @@ namespace Engine
 
     void Game::Shutdown()
     {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
 
+        glfwDestroyWindow(m_windowHandle);
+        glfwTerminate();
     }
 
 
