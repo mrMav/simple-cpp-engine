@@ -9,6 +9,8 @@ namespace Engine
 
 	public:
 
+		Viewport() { };
+
 		Viewport(uint32_t w, uint32_t h) : m_Width(w), m_Height(h)
 		{
 			m_HalfWidth  = m_Width / 2.0f;
