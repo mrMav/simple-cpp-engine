@@ -31,7 +31,8 @@ class TestGame : Game
      */
     void Load() override
     {
-
+        glClearColor(0.392, 0.584, 0.929, 1);  // good ol' cornflower blue
+        
     }
 
     /*

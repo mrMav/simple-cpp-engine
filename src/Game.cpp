@@ -100,7 +100,6 @@ namespace Engine
         // TODO: move to renderer init
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glClearColor(0.392, 0.584, 0.929, 1);
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
