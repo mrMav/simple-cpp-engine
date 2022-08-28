@@ -107,7 +107,7 @@ int main()
     camera.Position.x = 0;
     camera.Position.y = 0;
     camera.Position.z = 1.0f;
-    //camera.Zoom = 1.0f;
+    camera.Zoom = 8.0f;
 
     glm::mat4 squareTransform(1.0f);
     glm::vec3 squarePosition(viewport.Width() / 2.0f, viewport.Height() / 2.0f, -1.0f);
@@ -190,14 +190,27 @@ int main()
         
         //spritebatch.Draw(&texture, 0, 0, glm::radians(angle2));
 
-        for (int y = 0; y < 150; y++)
+        spritebatch.Draw(&dude, 0, 0);
+        spritebatch.Draw(&dude, 24, 0,  glm::radians(angle + angle2));
+        spritebatch.Draw(&dude, 24, 24, 0, 1.0f, 1.0f);
+        spritebatch.Draw(&dude, 4, 24, { 4, 3, 17, 21 });
+        spritebatch.Draw(&dude, 24 + 4, 48, { 4, 3, 17, 21 }, 0, 0.0f, 0.0f);
+
+
+
+        //spritebatch.Draw(&dude, 0, 0, { 4, 3, 17, 21 }, glm::radians(angle + angle2), 0.5f, 0.0f);
+
+
+        for (int y = 0; y < 40; y++)
         {
-            for (int x = 0; x < 150; x++)
+            for (int x = 0; x < 40; x++)
             {
                 angle++;
 
                 //spritebatch.Draw(&dude, x * 24, y * 24);
-                spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
+                //spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
+                //spritebatch.Draw(&dude, x * 17, y * 21, { 4, 3, 17, 21 });
+                //spritebatch.Draw(&dude, x * 17, y * 21, { 4, 3, 17, 21 }, glm::radians(angle + angle2), 0.5f, 0.0f);
             }
         }
 

@@ -22,6 +22,7 @@
 #include "Input/GamePadButtonCodes.h"
 
 #include "Utils/Utils.h"
+#include "Utils/Rectangle.h"
 
 #include "Game.h"
 
