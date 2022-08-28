@@ -46,6 +46,8 @@ if(COPY_SHADERS)
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/texture.png
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/dude1.png
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/mbf_small_00.png
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/mbf_big_00.png
     )
 
     set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)

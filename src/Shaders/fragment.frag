@@ -40,6 +40,6 @@ vec3 hueShift( vec3 color, float hueAdjust ){
 void main(){
 
     //FragColor = vec4(hueShift(vertexColor * uColor.xyz, uTime), uColor.a);
-    FragColor = texture(texture1, textureCoord);
+    FragColor = texture(texture1, textureCoord) * uColor;
 
 }

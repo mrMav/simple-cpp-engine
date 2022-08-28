@@ -47,8 +47,8 @@ namespace Engine
 			glTexParameteri(GL_TEXTURE_2D, pname, pvalue);
 		};
 
-		uint32_t GetWidth() { return m_Width; };
-		uint32_t GetHeight() { return m_Height; };
+		int GetWidth() { return m_Width; };
+		int GetHeight() { return m_Height; };
 
 	private:
 

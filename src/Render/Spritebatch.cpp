@@ -34,15 +34,17 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 	}
 
-	void Spritebatch::Begin(Shader* shader, Camera2D* camera, int16_t depth = 0)
+	void Spritebatch::Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth, bool customView)
 	{
 		_ENGINE_FAIL_WITH_MSG(!m_BeginCalled, "Spritebatch.Begin() was called, but Spritebatch.End() was never called!")
 
-		m_Shader = shader;
-		m_Camera = camera;
-
 		Reset();
 		m_Stats.Reset();
+
+		m_Shader = shader;
+		m_Camera = camera;
+		m_Tint = tint;
+		m_DrawCustomView = customView;
 
 		m_BeginCalled = true;
 
@@ -54,6 +56,9 @@ namespace Engine
 		m_BatchItemIndex = 0;
 		m_VerticesPtr = m_Vertices;
 		m_IndicesPtr = m_Indices;
+
+		m_Tint = glm::vec4(1);
+		m_DrawCustomView = false;
 	}
 
 	void Spritebatch::End()
@@ -94,6 +99,7 @@ namespace Engine
 
 	}
 
+
 	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect)
 	{
 		FlushIfNeeded();
@@ -115,6 +121,36 @@ namespace Engine
 		item->Set(x, y, clipRect, originX, originY, angle);
 
 		m_Stats.ItemCount++;
+
+	}
+
+	void Spritebatch::DrawString(BitmapFont* bitmapfont, int32_t x, int32_t y, const char* text)
+	{
+		int count = 0;
+		int add_y = 0;
+		int reset_x = 0;
+		char c = text[count];
+
+
+		while(c != '\0')
+		{
+			if(c == '\n')
+			{
+				add_y += bitmapfont->CharHeight() + 2;
+				reset_x = 0;
+				c = text[++count];
+				continue;
+			}
+
+			CharData d = bitmapfont->GetCharData(c);
+			Rectangle<int> rect = { d.x, d.y, d.w, d.h };
+
+			Draw(bitmapfont->GetTexture(), x + reset_x * d.w, y + add_y, rect);
+			
+			reset_x++;
+			c = text[++count];
+
+		}
 	}
 
 	void Spritebatch::FlushIfNeeded()
@@ -136,6 +172,17 @@ namespace Engine
 
 		for (int i = 0; i < m_BatchItemIndex; i++, m_VerticesPtr += 4, m_IndicesPtr += 6)
 		{
+
+			if (m_BatchItems[i].texture != currentTexture)
+			{
+				DrawBatch(currentTexture);
+				
+				//m_BatchItems[i].texture = currentTexture;
+				currentTexture = m_BatchItems[i].texture;
+
+
+			}
+
 			*(m_VerticesPtr + 0) = m_BatchItems[i].vertexTL;
 			*(m_VerticesPtr + 1) = m_BatchItems[i].vertexTR;
 			*(m_VerticesPtr + 2) = m_BatchItems[i].vertexBR;
@@ -143,14 +190,6 @@ namespace Engine
 
 			m_Stats.TotalVertices += 4;
 			m_Stats.TotalTriangles += 2;
-
-			if (m_BatchItems[i].texture != currentTexture)
-			{
-				m_BatchItems[i].texture = currentTexture;
-
-				DrawBatch(currentTexture);
-
-			}
 
 		}
 
@@ -165,8 +204,12 @@ namespace Engine
 
 		m_Shader->use();
 		m_Shader->setMat4("uModel", glm::mat4(1));
-		m_Shader->setMat4("uView", m_Camera->GetViewTransform());
+		if(m_DrawCustomView)
+			m_Shader->setMat4("uView", m_CustomView);
+		else
+			m_Shader->setMat4("uView", m_Camera->GetViewTransform());
 		m_Shader->setMat4("uProjection", m_Camera->GetProjectionTransform());
+		m_Shader->setVec4("uColor", m_Tint);
 
 		// calculate how many vertices we are drawing
 		uint32_t vertCount = m_VerticesPtr - m_Vertices;
