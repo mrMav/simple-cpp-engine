@@ -49,6 +49,15 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
-    }
+        "typeinfo": "cpp",
+        "bitset": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "map": "cpp",
+        "numbers": "cpp"
+    },
+    "cmake.configureArgs": [
+        "-DBUILD_TESTS=ON",
+        "-DCOPY_SHADERS=ON"
+    ]
 }

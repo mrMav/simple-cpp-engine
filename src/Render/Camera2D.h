@@ -22,9 +22,9 @@ namespace Engine
 
 		void Update(float gameTime);
 
-		glm::vec2 ScreenToWorld(glm::vec2& pos);
+		glm::vec2 ScreenToWorld(const glm::vec2& pos);
 		glm::vec2 ScreenToWorld(int x, int y);
-		glm::vec2 WorldToScreen(glm::vec2& pos);
+		glm::vec2 WorldToScreen(const glm::vec2& pos);
 		glm::vec2 WorldToScreen(int x, int y);
 
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }

@@ -131,7 +131,7 @@ namespace Engine
 		/// <param name="angle"></param>
 		/// <param name="origin"></param>
 		/// <returns></returns>
-		vec2 RotateVertice(vec2& v, float angle, vec2& origin)
+		vec2 RotateVertice(const vec2& v, float angle, vec2& origin)
 		{
 
 			return rotate(v - origin, angle) + origin;

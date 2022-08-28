@@ -228,7 +228,7 @@ int main()
         shader.setFloat("uTime", time);
         shader.setMat4("uModel", squareTransform);
         shader.setMat4("uView", camera.GetViewTransform());
-        shader.setMat4("uProjection", camera.GetProjectionViewTransform());
+        shader.setMat4("uProjection", camera.GetProjectionTransform());
 
         va.DrawElements();        
 
