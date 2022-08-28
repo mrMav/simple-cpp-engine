@@ -4,6 +4,10 @@ set (CMAKE_CXX_STANDARD 17)
 
 project(simple-cpp-engine)
 
+# options
+option(BUILD_TESTS "Build the sample tests that show case the engine usage." ON)
+option(COPY_SHADERS "Copy the engine sample shaders folder to the build folder." ON)
+
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCE})
 
 #specifies that we also have work to do on this directory
@@ -18,7 +22,9 @@ add_subdirectory(external)
 add_subdirectory(external/glfw)
 add_subdirectory(external/glm)
 
-add_subdirectory(engine-test)
+if(BUILD_TESTS)
+    add_subdirectory(engine-test)
+endif(BUILD_TESTS)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC external/glfw/include
@@ -32,20 +38,24 @@ target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src PRIVATE extern
 
 target_link_libraries(${PROJECT_NAME} glfw imgui)
 
-#copy the shader source to the target folder
-set(SHADERS_SOURCE
-    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/vertex.vert
-    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
-    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/texture.png
-    ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/dude1.png
-)
+if(COPY_SHADERS)
 
-set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)
+    #copy the shader source to the target folder
+    set(SHADERS_SOURCE
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/vertex.vert
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/fragment.frag
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/texture.png
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/dude1.png
+    )
 
-add_custom_target(COPY_SHADERS
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERS_DIR}            
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SHADERS_SOURCE} ${SHADERS_DIR}
-    COMMENT "Copying shaders source files to build..."
-)
+    set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)
 
-add_dependencies(simple-cpp-engine COPY_SHADERS)
+    add_custom_target(COPY_SHADERS
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${SHADERS_DIR}            
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SHADERS_SOURCE} ${SHADERS_DIR}
+        COMMENT "Copying shaders source files to build..."
+    )
+
+    add_dependencies(simple-cpp-engine COPY_SHADERS)
+
+endif(COPY_SHADERS)

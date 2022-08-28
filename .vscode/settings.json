@@ -55,5 +55,9 @@
         "concepts": "cpp",
         "map": "cpp",
         "numbers": "cpp"
-    }
+    },
+    "cmake.configureArgs": [
+        "-DBUILD_TESTS=ON",
+        "-DCOPY_SHADERS=ON"
+    ]
 }
