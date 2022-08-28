@@ -24,8 +24,8 @@ namespace Engine
 
         CharData d;
 
-        d.x = c % m_nCols;
-        d.y = c / m_nCols;
+        d.x = c % m_nCols * m_charWidth;
+        d.y = c / m_nCols * m_charHeight;
         d.w = m_charWidth;
         d.h = m_charHeight;
 

@@ -18,6 +18,7 @@ namespace MyTestGame
         Spritebatch* spritebatch;
         Shader* shader;
         Texture2D* dude;
+        Texture2D* test;
         Camera2D* camera;
         BitmapFont* font;
 
@@ -35,6 +36,7 @@ namespace MyTestGame
             delete spritebatch;
             delete shader;
             delete dude;
+            delete test;
             delete camera;
             delete font;
         }
@@ -54,6 +56,7 @@ namespace MyTestGame
             shader = new Shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
             shader->use();
             dude = new Texture2D("../../Shaders/dude1.png", {});
+            test = new Texture2D("../../Shaders/texture.png", {});
 
             camera = new Camera2D(GetViewport());
             camera->Position.x = 0;
@@ -63,7 +66,7 @@ namespace MyTestGame
 
             spritebatch = new Spritebatch();
 
-            font = new BitmapFont("../../Shaders/mbf_small_00.png", 7, 7);     
+            font = new BitmapFont("../../Shaders/mbf_big_00.png", 10, 12);     
 
             CharData d = font->GetCharData('A');
 
@@ -78,8 +81,33 @@ namespace MyTestGame
         {
             camera->Update(delta);
 
-            dude_position.x = GetViewport().HalfWidth();
-            dude_position.y = GetViewport().HalfHeight();
+            dude_position.x = 0;
+            dude_position.y = 60;
+
+            if(Input::IsKeyJustDown(Key::L))
+            {
+                // std::string s = spritebatch->GetStats().String();
+                std::string s = spritebatch->GetStats().String();
+                std::cout << s << std::endl;
+            }
+
+            float speed = 200.0;
+            if(Input::IsKeyPressed(Key::W))
+            {
+                camera->Position.y -= speed * delta;
+            }
+            if(Input::IsKeyPressed(Key::S))
+            {
+                camera->Position.y += speed * delta;
+            }
+            if(Input::IsKeyPressed(Key::A))
+            {
+                camera->Position.x -= speed * delta;
+            }
+            if(Input::IsKeyPressed(Key::D))
+            {
+                camera->Position.x += speed * delta;
+            }
         }
 
         /*
@@ -91,10 +119,17 @@ namespace MyTestGame
             glClear(GL_COLOR_BUFFER_BIT);
 
 
-            spritebatch->Begin(shader, camera, 0);
+            spritebatch->Begin(shader, camera, glm::vec4(1), 0);
+            spritebatch->Draw(test, 0, 0);
             spritebatch->Draw(dude, dude_position.x, dude_position.y, 0);
             spritebatch->End();
 
+            spritebatch->Begin(shader, camera, glm::vec4(1, 0, 0, 1), 0);
+            spritebatch->DrawString(font, 0, -24, "Hello text!");
+            spritebatch->DrawString(font, -100, -80, "What if I add a new\nline?");
+            spritebatch->DrawString(font, 0, 0, "I guess\nthis thing\nreally\nworks?\n\n\nyeahhhh");
+            spritebatch->DrawString(font, -200, 0, "LET'S GO\nALL CAPS\nHERE!");
+            spritebatch->End();
         }
 
 
