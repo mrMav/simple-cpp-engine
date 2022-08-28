@@ -94,6 +94,7 @@ namespace Engine
 
 	}
 
+
 	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect)
 	{
 		FlushIfNeeded();
@@ -115,6 +116,7 @@ namespace Engine
 		item->Set(x, y, clipRect, originX, originY, angle);
 
 		m_Stats.ItemCount++;
+
 	}
 
 	void Spritebatch::FlushIfNeeded()
