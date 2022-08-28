@@ -26,6 +26,9 @@ namespace Engine
         Texture2D* GetTexture() { return m_fontData; }
         CharData GetCharData(char c);
 
+        int CharWidth() const { return m_charWidth; };
+        int CharHeight() const { return m_charHeight; };
+
         private:
         
         Texture2D* m_fontData;

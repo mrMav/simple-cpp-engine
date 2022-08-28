@@ -34,7 +34,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 	}
 
-	void Spritebatch::Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth = 0)
+	void Spritebatch::Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth, bool customView)
 	{
 		_ENGINE_FAIL_WITH_MSG(!m_BeginCalled, "Spritebatch.Begin() was called, but Spritebatch.End() was never called!")
 
@@ -44,6 +44,7 @@ namespace Engine
 		m_Shader = shader;
 		m_Camera = camera;
 		m_Tint = tint;
+		m_DrawCustomView = customView;
 
 		m_BeginCalled = true;
 
@@ -57,6 +58,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 
 		m_Tint = glm::vec4(1);
+		m_DrawCustomView = false;
 	}
 
 	void Spritebatch::End()
@@ -134,7 +136,7 @@ namespace Engine
 		{
 			if(c == '\n')
 			{
-				add_y += 7 + 2;
+				add_y += bitmapfont->CharHeight() + 2;
 				reset_x = 0;
 				c = text[++count];
 				continue;
@@ -202,7 +204,10 @@ namespace Engine
 
 		m_Shader->use();
 		m_Shader->setMat4("uModel", glm::mat4(1));
-		m_Shader->setMat4("uView", m_Camera->GetViewTransform());
+		if(m_DrawCustomView)
+			m_Shader->setMat4("uView", m_CustomView);
+		else
+			m_Shader->setMat4("uView", m_Camera->GetViewTransform());
 		m_Shader->setMat4("uProjection", m_Camera->GetProjectionTransform());
 		m_Shader->setVec4("uColor", m_Tint);
 

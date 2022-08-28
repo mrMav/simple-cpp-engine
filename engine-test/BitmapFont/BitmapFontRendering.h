@@ -127,8 +127,13 @@ namespace MyTestGame
             spritebatch->Begin(shader, camera, glm::vec4(1, 0, 0, 1), 0);
             spritebatch->DrawString(font, 0, -24, "Hello text!");
             spritebatch->DrawString(font, -100, -80, "What if I add a new\nline?");
+            spritebatch->End();
+
+            spritebatch->Begin(shader, camera, glm::vec4(1, 0, 0, 1), 0, true);
+            spritebatch->SetCustomView(glm::scale(glm::mat4(1), glm::vec3(2.0f))); 
             spritebatch->DrawString(font, 0, 0, "I guess\nthis thing\nreally\nworks?\n\n\nyeahhhh");
-            spritebatch->DrawString(font, -200, 0, "LET'S GO\nALL CAPS\nHERE!");
+            spritebatch->DrawString(font, 0, 200, "LET'S GO\nALL CAPS\nHERE!");
+            //spritebatch->DrawString(font, 100, 200, "unsupported chars:\n«>)[]/!236´!");  //uncomment for exit with failure
             spritebatch->End();
         }
 

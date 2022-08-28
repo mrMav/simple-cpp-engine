@@ -66,8 +66,8 @@ namespace Engine
 			m_VertexArray->Delete();
 		};
 
-		void Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth);
-
+		void Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth = 0, bool customView = false);
+		void SetCustomView(glm::mat4 viewTransform) { m_CustomView = viewTransform; };
 		void End();
 
 		void Draw(Texture2D* texture, int32_t x, int32_t y);
@@ -90,6 +90,8 @@ namespace Engine
 		Shader* m_Shader = nullptr;
 		Camera2D* m_Camera = nullptr;
 		glm::vec4 m_Tint = glm::vec4(1);
+		glm::mat4 m_CustomView = glm::mat4(1);
+		bool m_DrawCustomView = false;
 
 		VertexArray* m_VertexArray = nullptr;
 
