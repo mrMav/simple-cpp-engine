@@ -4,7 +4,7 @@
 namespace Engine
 {
 
-    BitmapFont::BitmapFont(const char* filename, uint16_t charWidth, uint16_t charHeight)
+    BitmapFont::BitmapFont(const char* filename, int charWidth, int charHeight)
         : m_charWidth(charWidth), m_charHeight(charHeight)
     {
         m_fontData = new Texture2D(filename, {});

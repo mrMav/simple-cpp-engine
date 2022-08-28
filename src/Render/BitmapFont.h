@@ -7,7 +7,7 @@ namespace Engine
 
     struct CharData
     {
-        uint16_t x, y, w, h;
+        int x, y, w, h;
     };
 
 
@@ -16,7 +16,7 @@ namespace Engine
     {
 
         public:
-        BitmapFont(const char* filename, uint16_t charWidth, uint16_t charHeight);
+        BitmapFont(const char* filename, int charWidth, int charHeight);
         ~BitmapFont()
         {
             // TODO: check if this is correct. We might need opengl context for this
@@ -30,11 +30,11 @@ namespace Engine
         
         Texture2D* m_fontData;
 
-        uint16_t m_charWidth;
-        uint16_t m_charHeight;
+        int m_charWidth;
+        int m_charHeight;
 
-        uint16_t m_nCols;
-        uint16_t m_nRows;
+        int m_nCols;
+        int m_nRows;
 
         char m_maxIndex;
 
