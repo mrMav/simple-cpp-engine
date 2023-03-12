@@ -3,18 +3,37 @@
 
 namespace Engine
 {
-	Camera2D::Camera2D(const Viewport& v)
+	Camera2D::Camera2D(Viewport& v)
 		: m_Viewport(v)
 	{
-		m_Origin = glm::vec3(m_Viewport.Width() / 2.0f, m_Viewport.Height() / 2.0f, 0.0f);
+		UpdateOrigin();
 		Position = glm::vec3(0.0f);  // camera coords are in world coords, since the camera IS the world
 		Position.z = -1.0f;
 
 		Zoom = 1.0f;
 
-		m_ProjectionTransform = glm::ortho<float>(0, m_Viewport.Width(), m_Viewport.Height(), 0, -100, 100);
+		UpdateProjection();
 		
 	}
+
+	void Camera2D::UpdateProjection()
+	{
+		m_ProjectionTransform = glm::ortho<float>(0, m_Viewport.Width(), m_Viewport.Height(), 0, -100, 100);
+	}
+
+	void Camera2D::UpdateOrigin()
+	{
+		m_Origin = glm::vec3(m_Viewport.Width() / 2.0f, m_Viewport.Height() / 2.0f, 0.0f);
+	}
+
+	void Camera2D::SetViewport(Viewport& v)
+	{
+		m_Viewport = v;
+		UpdateOrigin();
+		UpdateProjection();
+
+	}
+
 
 	void Camera2D::Update(float gameTime) //TODO: make delta time a struct with access to ellpased time, etc
 	{

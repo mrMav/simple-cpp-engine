@@ -27,6 +27,7 @@
 #include "Utils/Rectangle.h"
 
 #include "Game.h"
+#include "Timer.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"

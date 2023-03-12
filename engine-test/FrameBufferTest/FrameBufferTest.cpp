@@ -12,6 +12,12 @@ using namespace Engine;
 namespace FrameBufferTestGame
 {
 
+    bool useFrameBuffer = false;
+    float angle = 0;
+
+    Camera2D* currentCamera = nullptr;
+
+
     TestGame::TestGame(uint32_t screenWidth, uint32_t screenHeight, const char* windowTitle)
         : Game(screenWidth, screenHeight, windowTitle)
     {
@@ -24,7 +30,7 @@ namespace FrameBufferTestGame
         delete[] quad_vertices;
         delete[] quad_indices;
         delete framebuffer;
-
+        delete sceneViewport;
         delete camera;
         delete spritebatch;
         delete dude;
@@ -39,6 +45,11 @@ namespace FrameBufferTestGame
 
         // creating a square with normalized positions
 
+        renderTargetWidth  = 24 * 3;
+        renderTargetHeight = 24 * 3;
+
+        sceneViewport = new Viewport(renderTargetWidth, renderTargetHeight);
+
         quad = new VertexArray(&VertexPositionTexture::Attributes);
         
         quad_vertices = new VertexPositionTexture[4];
@@ -47,10 +58,10 @@ namespace FrameBufferTestGame
         quad_vertices[2].Position = glm::vec3( 1, -1, 0);  // bottom right
         quad_vertices[3].Position = glm::vec3(-1, -1, 0);  // bottom left
 
-        quad_vertices[0].Texture = glm::vec2(0, 0);   // top left
-        quad_vertices[1].Texture = glm::vec2(1, 0);   // top right
-        quad_vertices[2].Texture = glm::vec2(1, 1);   // bottom right
-        quad_vertices[3].Texture = glm::vec2(0, 1);   // bottom left
+        quad_vertices[0].Texture = glm::vec2(0, 1);   // top left
+        quad_vertices[1].Texture = glm::vec2(1, 1);   // top right
+        quad_vertices[2].Texture = glm::vec2(1, 0);   // bottom right
+        quad_vertices[3].Texture = glm::vec2(0, 0);   // bottom left
 
         quad->SetVertices(quad_vertices, 4 * sizeof(VertexPositionTexture));
 
@@ -66,7 +77,7 @@ namespace FrameBufferTestGame
         quad->SetIndices(quad_indices, 6);
 
         // create a framebuffer smaller than the screen size
-        framebuffer = new FrameBuffer(800, 800);
+        framebuffer = new FrameBuffer(renderTargetWidth, renderTargetHeight);
         screenSpaceShader = Shader("../../Shaders/normalized_vertex.vert", "../../Shaders/sample_fragment.frag");
         //screenSpaceShader.setInt("screenTexture", 0);
 
@@ -74,11 +85,9 @@ namespace FrameBufferTestGame
         spritebatchShader = Shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
         dude = new Texture2D("../../Shaders/dude1.png", {});
 
+        sceneCamera = new Camera2D(*sceneViewport);
         camera = new Camera2D(GetViewport());
-        camera->Position.x = 0;
-        camera->Position.y = 0;
-        camera->Position.z = 1.0f;
-        camera->Zoom = 8.0f;
+        camera->Zoom = static_cast<float>(GetViewport().Width()) / renderTargetWidth;
 
         spritebatch = new Spritebatch();
 
@@ -93,10 +102,29 @@ namespace FrameBufferTestGame
     */
     void TestGame::Update(float delta)
     {
-        camera->Update(delta);
+        
+        if (Input::IsKeyJustDown(Key::F))
+        {
+            useFrameBuffer = !useFrameBuffer;
+            
+        }
+        if (Input::IsKeyJustDown(Key::T))
+        {
+            camera->Zoom = static_cast<float>(GetViewport().Width()) / renderTargetWidth;
+        }
+        if (Input::IsKeyJustDown(Key::R))
+        {
+            camera->Zoom = 1;
+        }
 
-        dude_position.x = GetViewport().HalfWidth();
-        dude_position.y = GetViewport().HalfHeight();
+        if (useFrameBuffer)
+            currentCamera = sceneCamera;
+        else
+            currentCamera = camera;
+
+        sceneCamera->Update(delta);
+        camera->Update(delta);
+        
     };
 
     /*
@@ -105,33 +133,50 @@ namespace FrameBufferTestGame
     */
     void TestGame::Render(float delta)
     {
-        // render to framebuffer first
-        glViewport(0, 0, 240, 240);
-        framebuffer->Bind();
+
+        if (useFrameBuffer)
+        {
+            // render to framebuffer first
+            glViewport(0, 0, renderTargetWidth, renderTargetHeight);
+            framebuffer->Bind();
+
+        }
+        else
+        {
+            glViewport(0, 0, GetViewport().Width(), GetViewport().Height());
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
         glClearColor(0.392, 0.584, 0.929, 1);  // good ol' cornflower blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
 
+        angle += 45.0f * delta;
 
         // draw our scene
-        spritebatch->Begin(&spritebatchShader, camera, glm::vec4(1));
-        spritebatch->Draw(dude, 0, 0, 0);
-        spritebatch->Draw(dude, 0, 0, 45.0, 0);
+        spritebatch->Begin(&spritebatchShader, currentCamera, glm::vec4(1));
+        spritebatch->Draw(dude, -dude->GetWidth() / 2.0, -dude->GetHeight() / 2.0, glm::radians(angle));  // drawing the dude centered
         spritebatch->End();
 
 
-        // draw the screen quad with the rendered framebuffer
-        glViewport(0, 0, 800, 800);
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glDisable(GL_DEPTH_TEST);
-        glClearColor(1, 1, 1, 1);
-        glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
+        if (useFrameBuffer)
+        {
+            // draw the screen quad with the rendered framebuffer
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, GetViewport().Width(), GetViewport().Height());
+            glDisable(GL_DEPTH_TEST);
+            glClearColor(0.8, 0.8, 0.8, 1);
+            glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
 
 
-        screenSpaceShader.use();
-        quad->Bind();
-        framebuffer->BindTexture();
-        quad->DrawElements();
+            screenSpaceShader.use();
+            quad->Bind();
+            framebuffer->BindTexture();
+            //dude->Bind();
+            quad->DrawElements();
+
+        }
+
 
     };
 

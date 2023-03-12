@@ -44,6 +44,8 @@ namespace FrameBufferTestGame
         VertexPositionTexture* quad_vertices;
         uint16_t* quad_indices;
 
+        Camera2D* sceneCamera;
+        Viewport* sceneViewport;
         FrameBuffer* framebuffer;
         Shader screenSpaceShader;
 
@@ -54,6 +56,9 @@ namespace FrameBufferTestGame
         Spritebatch* spritebatch;
 
         glm::vec2 dude_position;
+
+
+        int renderTargetWidth, renderTargetHeight;
 
 
     };
