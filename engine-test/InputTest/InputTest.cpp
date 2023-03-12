@@ -235,7 +235,7 @@ int main()
 
         /* test spritebatch */
 
-        spritebatch.Begin(&shader, &camera, 1);
+        spritebatch.Begin(&shader, &camera, glm::vec4(1, 1, 1, 1));
         
         for (int y = 0; y < 20; y++)
         {

@@ -48,6 +48,8 @@ if(COPY_SHADERS)
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/dude1.png
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/mbf_small_00.png
         ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/mbf_big_00.png
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/normalized_vertex.vert
+        ${CMAKE_CURRENT_LIST_DIR}/src/Shaders/sample_fragment.frag
     )
 
     set(SHADERS_DIR ${CMAKE_BINARY_DIR}/Shaders)

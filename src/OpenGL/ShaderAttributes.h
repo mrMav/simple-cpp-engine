@@ -125,6 +125,13 @@ namespace Engine
         {
             
         }
+
+        VertexPositionTexture()
+        {
+            Position = glm::vec3(0);
+            Texture = glm::vec2(0);
+        }
+
     };
 
     struct VertexPositionColor

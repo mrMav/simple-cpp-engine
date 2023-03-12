@@ -83,7 +83,7 @@ namespace MyTestGame
             glClear(GL_COLOR_BUFFER_BIT);
 
 
-            spritebatch->Begin(shader, camera, 0);
+            spritebatch->Begin(shader, camera, glm::vec4(1));
             spritebatch->Draw(dude, dude_position.x, dude_position.y, 0);
             spritebatch->End();
 
