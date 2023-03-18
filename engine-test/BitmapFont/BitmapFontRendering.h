@@ -53,10 +53,10 @@ namespace MyTestGame
         {
             glClearColor(0.392, 0.584, 0.929, 1);  // good ol' cornflower blue
 
-            shader = new Shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
+            shader = new Shader("Resources/vertex.vert", "Resources/fragment.frag");
             shader->use();
-            dude = new Texture2D("../../Shaders/dude1.png", {});
-            test = new Texture2D("../../Shaders/texture.png", {});
+            dude = new Texture2D("Resources/dude1.png", {});
+            test = new Texture2D("Resources/texture.png", {});
 
             camera = new Camera2D(GetViewport());
             camera->Position.x = 0;
@@ -66,7 +66,7 @@ namespace MyTestGame
 
             spritebatch = new Spritebatch();
 
-            font = new BitmapFont("../../Shaders/mbf_big_00.png", 10, 12);     
+            font = new BitmapFont("Resources/mbf_big_00.png", 10, 12);     
 
             CharData d = font->GetCharData('A');
 

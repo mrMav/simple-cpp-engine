@@ -78,12 +78,12 @@ namespace FrameBufferTestGame
 
         // create a framebuffer smaller than the screen size
         framebuffer = new FrameBuffer(renderTargetWidth, renderTargetHeight);
-        screenSpaceShader = Shader("../../Shaders/normalized_vertex.vert", "../../Shaders/sample_fragment.frag");
+        screenSpaceShader = Shader("Resources/normalized_vertex.vert", "Resources/sample_fragment.frag");
         //screenSpaceShader.setInt("screenTexture", 0);
 
         // load game world related stuff
-        spritebatchShader = Shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
-        dude = new Texture2D("../../Shaders/dude1.png", {});
+        spritebatchShader = Shader("Resources/vertex.vert", "Resources/fragment.frag");
+        dude = new Texture2D("Resources/dude1.png", {});
 
         sceneCamera = new Camera2D(*sceneViewport);
         camera = new Camera2D(GetViewport());

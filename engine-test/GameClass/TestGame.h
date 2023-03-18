@@ -47,9 +47,9 @@ namespace MyTestGame
         {
             glClearColor(0.392, 0.584, 0.929, 1);  // good ol' cornflower blue
 
-            shader = new Shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
+            shader = new Shader("Resources/vertex.vert", "Resources/fragment.frag");
             shader->use();
-            dude = new Texture2D("../../Shaders/dude1.png", {});
+            dude = new Texture2D("Resources/dude1.png", {});
 
             camera = new Camera2D(GetViewport());
             camera->Position.x = 0;
