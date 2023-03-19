@@ -168,11 +168,16 @@ namespace FrameBufferTestGame
             glClearColor(0.8, 0.8, 0.8, 1);
             glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
 
+            // maybe i can just use the spritebatch as well?
+
+            // spritebatch->Begin(&screenSpaceShader, currentCamera, glm::vec4(1), 0);
+            // spritebatch->Draw(framebuffer->GetColorTexture(), 0, 0);
+            // spritebatch->End();
 
             screenSpaceShader.use();
             quad->Bind();
             framebuffer->BindTexture();
-            //dude->Bind();
+            dude->Bind();
             quad->DrawElements();
 
         }

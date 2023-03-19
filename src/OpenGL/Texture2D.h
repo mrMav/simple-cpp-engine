@@ -34,6 +34,8 @@ namespace Engine
 
 	public:
 
+		Texture2D();
+		Texture2D(int width, int height, TextureParams params);
 		Texture2D(const char* filename, TextureParams params);
 		~Texture2D() { };
 
@@ -41,14 +43,13 @@ namespace Engine
 		{
 			glBindTexture(GL_TEXTURE_2D, m_Texture);
 		};
-
-		void SetParameteri(GLenum pname, int pvalue)
-		{
-			glTexParameteri(GL_TEXTURE_2D, pname, pvalue);
-		};
+		
+		void LoadFromFile(const char* filename);
 
 		int GetWidth() { return m_Width; };
 		int GetHeight() { return m_Height; };
+
+		GLuint GetHandle() { return m_Texture; }
 
 	private:
 
@@ -58,6 +59,10 @@ namespace Engine
 
 		TextureParams m_Params;
 
+		void SetParameteri(GLenum pname, int pvalue)
+		{
+			glTexParameteri(GL_TEXTURE_2D, pname, pvalue);
+		};
 	};
 
 }

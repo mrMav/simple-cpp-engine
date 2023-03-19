@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string>
 #include <glad/glad.h>
 #include <Internal.h>
 
 #include "FrameBufferAttachment.h"
+#include "Texture2D.h"
 
 namespace Engine
 {
@@ -30,13 +32,18 @@ namespace Engine
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Color.GetHandle(), 0);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencil.GetHandle());
 
-			
-			_ENGINE_FAIL_WITH_MSG(CheckBufferStatus(), "Framebuffer not successfully created!");
+			_ENGINE_FAIL_WITH_MSG(CheckBufferStatus(), std::string("Framebuffer not successfully created! Error:") + std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)))
+
 
 			Unbind();
 
 		}
 		~FrameBuffer() {};
+
+		Texture2D* GetColorTexture()
+		{
+			return m_Color.GetTexture();
+		}
 
 		void Bind() const
 		{
@@ -61,7 +68,7 @@ namespace Engine
 	private:
 
 		GLuint m_Handle;
-
+		
 		FrameBufferAttachment m_Color;
 		FrameBufferAttachment m_DepthStencil;
 
