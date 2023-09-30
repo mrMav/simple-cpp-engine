@@ -22,9 +22,7 @@ namespace Engine
 			if (isSample)
 			{
 				
-				m_Texture = new Texture2D({});
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-
+				m_Texture = new Texture2D(width, height, {});
 				_ENGINE_LOG("OPENGL", "Created frame buffer attachment of type texture.")
 			}
 			else
@@ -75,7 +73,6 @@ namespace Engine
 
 			if (m_IsSample)
 			{
-				_ENGINE_LOG("asd", m_Texture->GetHandle())
 				return m_Texture->GetHandle();
 			}
 

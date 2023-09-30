@@ -25,7 +25,6 @@ namespace Engine
 		m_Height = height;
 
 		Bind();
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
 

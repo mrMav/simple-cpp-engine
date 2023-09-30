@@ -177,7 +177,6 @@ namespace FrameBufferTestGame
             screenSpaceShader.use();
             quad->Bind();
             framebuffer->BindTexture();
-            dude->Bind();
             quad->DrawElements();
 
         }

@@ -26,11 +26,11 @@ namespace Engine
 			glGenFramebuffers(1, &m_Handle);
 			Bind();
 			
-			m_Color = FrameBufferAttachment(width, height, true);
-			m_DepthStencil = FrameBufferAttachment(width, height, false);
+			m_Color = new FrameBufferAttachment(width, height, true);
+			m_DepthStencil = new FrameBufferAttachment(width, height, false);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Color.GetHandle(), 0);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencil.GetHandle());
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Color->GetHandle(), 0);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencil->GetHandle());
 
 			_ENGINE_FAIL_WITH_MSG(CheckBufferStatus(), std::string("Framebuffer not successfully created! Error:") + std::to_string(glCheckFramebufferStatus(GL_FRAMEBUFFER)))
 
@@ -42,7 +42,7 @@ namespace Engine
 
 		Texture2D* GetColorTexture()
 		{
-			return m_Color.GetTexture();
+			return m_Color->GetTexture();
 		}
 
 		void Bind() const
@@ -52,7 +52,7 @@ namespace Engine
 
 		void BindTexture()
 		{
-			m_Color.Bind();
+			m_Color->Bind();
 		}
 
 		void Unbind() const
@@ -69,8 +69,8 @@ namespace Engine
 
 		GLuint m_Handle;
 		
-		FrameBufferAttachment m_Color;
-		FrameBufferAttachment m_DepthStencil;
+		FrameBufferAttachment* m_Color;
+		FrameBufferAttachment* m_DepthStencil;
 
 		int m_Width, m_Height;
 
