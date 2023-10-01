@@ -20,6 +20,7 @@ namespace Engine
 	Texture2D::Texture2D(int width, int height, TextureParams params)
 		: Texture2D()
 	{
+		
 		m_Params = params;
 		m_Width = width;
 		m_Height = height;

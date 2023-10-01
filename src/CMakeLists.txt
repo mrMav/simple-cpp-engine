@@ -1,10 +1,11 @@
 
 set(HEADERS
     ${HEADERS}
+    Typedefs.h
     Internal.h
     Engine.h
     Game.h
-    Timer.h
+    Timer.h    
 )
 
 set(SOURCE

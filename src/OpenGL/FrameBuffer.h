@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include <glad/glad.h>
 #include <Internal.h>
 
@@ -26,8 +27,8 @@ namespace Engine
 			glGenFramebuffers(1, &m_Handle);
 			Bind();
 			
-			m_Color = new FrameBufferAttachment(width, height, true);
-			m_DepthStencil = new FrameBufferAttachment(width, height, false);
+			m_Color = std::make_shared<FrameBufferAttachment>(width, height, true);
+			m_DepthStencil = std::make_shared<FrameBufferAttachment>(width, height, false);
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Color->GetHandle(), 0);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencil->GetHandle());
@@ -40,7 +41,7 @@ namespace Engine
 		}
 		~FrameBuffer() {};
 
-		Texture2D* GetColorTexture()
+		Ref<Texture2D> GetColorTexture()
 		{
 			return m_Color->GetTexture();
 		}
@@ -69,8 +70,8 @@ namespace Engine
 
 		GLuint m_Handle;
 		
-		FrameBufferAttachment* m_Color;
-		FrameBufferAttachment* m_DepthStencil;
+		Ref<FrameBufferAttachment> m_Color;
+		Ref<FrameBufferAttachment> m_DepthStencil;
 
 		int m_Width, m_Height;
 

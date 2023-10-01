@@ -40,26 +40,13 @@ namespace FrameBufferTestGame
 
     private:
 
-        VertexArray* quad;
-        VertexPositionTexture* quad_vertices;
-        uint16_t* quad_indices;
+        Ref<Texture2D> dude;
+        Ref<Shader> spritebatchShader;
 
-        Camera2D* sceneCamera;
-        Viewport* sceneViewport;
-        FrameBuffer* framebuffer;
-        Shader screenSpaceShader;
-
-        Texture2D* dude;
-        Shader spritebatchShader;
-
-        Camera2D* camera;
-        Spritebatch* spritebatch;
+        Ref<Camera2D> camera;
+        Ref<Spritebatch> spritebatch;
 
         glm::vec2 dude_position;
-
-
-        int renderTargetWidth, renderTargetHeight;
-
-
+        
     };
 }

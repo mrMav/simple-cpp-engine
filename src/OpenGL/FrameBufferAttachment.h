@@ -22,7 +22,7 @@ namespace Engine
 			if (isSample)
 			{
 				
-				m_Texture = new Texture2D(width, height, {});
+				m_Texture = std::make_shared<Texture2D>(width, height, TextureParams());
 				_ENGINE_LOG("OPENGL", "Created frame buffer attachment of type texture.")
 			}
 			else
@@ -41,9 +41,7 @@ namespace Engine
 		}
 
 		~FrameBufferAttachment()
-		{
-			delete m_Texture;
-		};
+		{ };
 
 		void Bind()
 		{
@@ -66,7 +64,7 @@ namespace Engine
 
 		};
 
-		Texture2D* GetTexture() { return m_Texture; }
+		Ref<Texture2D> GetTexture() { return m_Texture; }
 
 		GLuint GetHandle()
 		{
@@ -83,7 +81,7 @@ namespace Engine
 
 		GLuint m_Handle;
 
-		Texture2D* m_Texture = nullptr;
+		Ref<Texture2D> m_Texture;
 
 		bool m_IsSample;
 
