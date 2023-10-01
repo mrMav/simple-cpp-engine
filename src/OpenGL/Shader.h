@@ -28,6 +28,8 @@ namespace Engine
 		// program ID
 		GLuint program;
 
+		Shader() { };
+
 		// constructor
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
 

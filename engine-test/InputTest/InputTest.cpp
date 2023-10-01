@@ -80,10 +80,10 @@ int main()
         2, 1, 3
     };
 
-    Shader shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
+    Shader shader("Resources/vertex.vert", "Resources/fragment.frag");
     shader.use();
-    Texture2D texture("../../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
-    Texture2D dude("../../Shaders/dude1.png", {});
+    Texture2D texture("Resources/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
+    Texture2D dude("Resources/dude1.png", {});
 
     Spritebatch spritebatch;
 
@@ -235,7 +235,7 @@ int main()
 
         /* test spritebatch */
 
-        spritebatch.Begin(&shader, &camera, 1);
+        spritebatch.Begin(&shader, &camera, glm::vec4(1, 1, 1, 1));
         
         for (int y = 0; y < 20; y++)
         {

@@ -12,6 +12,8 @@
 #include "OpenGL/GLUtils.h"
 #include "OpenGL/ShaderAttributes.h"
 #include "OpenGL/Texture2D.h"
+#include "OpenGL/FrameBuffer.h"
+#include "OpenGL/FrameBufferAttachment.h"
 
 #include "Render/Viewport.h"
 #include "Render/Camera2D.h"
@@ -25,6 +27,7 @@
 #include "Utils/Rectangle.h"
 
 #include "Game.h"
+#include "Timer.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"

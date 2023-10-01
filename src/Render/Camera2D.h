@@ -17,7 +17,7 @@ namespace Engine
 		glm::vec3 Position;
 		float Zoom;
 
-		Camera2D(const Viewport&);
+		Camera2D(Viewport&);
 		~Camera2D() { };
 
 		void Update(float gameTime);
@@ -30,6 +30,8 @@ namespace Engine
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }
 		glm::mat4 GetProjectionTransform() const { return m_ProjectionTransform; }
 
+		void SetViewport(Viewport& v);
+		
 	private:
 
 		glm::vec3 m_Origin;
@@ -37,7 +39,10 @@ namespace Engine
 		glm::mat4 m_ViewTransform;
 		glm::mat4 m_ProjectionTransform;
 
-		const Viewport& m_Viewport;
+		Viewport& m_Viewport;
+
+		void UpdateProjection();
+		void UpdateOrigin();
 
 	};
 

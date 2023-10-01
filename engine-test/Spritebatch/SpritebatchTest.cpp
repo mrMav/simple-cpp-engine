@@ -89,10 +89,10 @@ int main()
         2, 1, 3
     };
 
-    Shader shader("../../Shaders/vertex.vert", "../../Shaders/fragment.frag");
+    Shader shader("Resources/vertex.vert", "Resources/fragment.frag");
     shader.use();
-    Texture2D texture("../../Shaders/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
-    Texture2D dude("../../Shaders/dude1.png", {});
+    Texture2D texture("Resources/texture.png", {GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, true});
+    Texture2D dude("Resources/dude1.png", {});
 
     Spritebatch spritebatch;
 
@@ -186,29 +186,29 @@ int main()
         float angle = 0.0f;
         angle2 += 45.0f * delta;
 
-        spritebatch.Begin(&shader, &camera, 1);
+        spritebatch.Begin(&shader, &camera, glm::vec4(1));
         
         //spritebatch.Draw(&texture, 0, 0, glm::radians(angle2));
 
-        spritebatch.Draw(&dude, 0, 0);
+        /*spritebatch.Draw(&dude, 0, 0);
         spritebatch.Draw(&dude, 24, 0,  glm::radians(angle + angle2));
         spritebatch.Draw(&dude, 24, 24, 0, 1.0f, 1.0f);
         spritebatch.Draw(&dude, 4, 24, { 4, 3, 17, 21 });
         spritebatch.Draw(&dude, 24 + 4, 48, { 4, 3, 17, 21 }, 0, 0.0f, 0.0f);
-
+*/
 
 
         //spritebatch.Draw(&dude, 0, 0, { 4, 3, 17, 21 }, glm::radians(angle + angle2), 0.5f, 0.0f);
 
 
-        for (int y = 0; y < 40; y++)
+        for (int y = 0; y < 100; y++)
         {
-            for (int x = 0; x < 40; x++)
+            for (int x = 0; x < 100; x++)
             {
                 angle++;
 
                 //spritebatch.Draw(&dude, x * 24, y * 24);
-                //spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
+                spritebatch.Draw(&dude, x * 24, y * 24, glm::radians(angle + angle2));
                 //spritebatch.Draw(&dude, x * 17, y * 21, { 4, 3, 17, 21 });
                 //spritebatch.Draw(&dude, x * 17, y * 21, { 4, 3, 17, 21 }, glm::radians(angle + angle2), 0.5f, 0.0f);
             }

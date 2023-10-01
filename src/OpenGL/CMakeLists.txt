@@ -8,6 +8,8 @@ set(HEADERS
     GLUtils.h
     Shader.h
     Texture2D.h
+    FrameBuffer.h
+    FrameBufferAttachment.h
 )
 
 set(SOURCE
