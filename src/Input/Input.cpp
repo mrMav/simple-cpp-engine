@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <fstream>
+#include <sstream>
 
 #include "Internal.h"
 #include "Input.h"
@@ -60,8 +62,8 @@ namespace Engine
 		{
 			if (!glfwJoystickIsGamepad(id))
 			{
-				_ENGINE_LOG("INPUT", "Joystick not supported! (not gamepad mapping support)")
-					return;
+				_ENGINE_LOG("INPUT", "Joystick not supported! (no gamepad mapping support)") 
+				return;
 			}
 
 			s_InputData.Joysticks.push_back(id);
@@ -109,6 +111,26 @@ namespace Engine
 		glfwSetJoystickCallback(GLFWJoystickCallback);
 		glfwSetCursorPosCallback(window, GLFWCursorCallback);
 		glfwSetMouseButtonCallback(window, GLFWMouseButtonCallback);
+
+		// Loading custom gamepad mappings
+		std::ifstream file("gamepad_mappings.txt");
+		if(file.good())
+		{
+			_ENGINE_LOG("INPUT", "Found custom gamepad mappings.")
+
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			
+			int success = glfwUpdateGamepadMappings(buffer.str().c_str());
+			if(success == GLFW_FALSE)
+			{
+				_ENGINE_LOG("INPUT", "Could not set custom gamepad mappings.")
+			} else
+			{
+				_ENGINE_LOG("INPUT", "Updated custom gamepad mappings! " + std::string(buffer.str().c_str()))
+			}
+			
+		}
 
 		DetectConnectedJoysticks();
 
