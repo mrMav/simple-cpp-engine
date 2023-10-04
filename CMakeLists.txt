@@ -15,6 +15,7 @@ add_subdirectory(src/OpenGL)
 add_subdirectory(src/Render)
 add_subdirectory(src/Input)
 add_subdirectory(src/Utils)
+add_subdirectory(src/Systems)
 
 # build librarires
 add_subdirectory(external)

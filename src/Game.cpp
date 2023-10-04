@@ -49,7 +49,7 @@ namespace Engine
             double newTime = glfwGetTime();
             delta = newTime - time;
             time = newTime;
-
+            
             Update(delta);
 
             PreRender();
@@ -186,7 +186,33 @@ namespace Engine
         m_screenQuad->SetIndices(m_screenQuadIndices, 6);
 
         m_renderTarget = std::make_shared<FrameBuffer>(renderTargetWidth, renderTargetHeight);
-        m_screenSpaceShader = std::make_shared<Shader>("Resources/normalized_vertex.vert", "Resources/sample_fragment.frag");
+
+        std::string vertexSource = R"(#version 330 core
+
+layout (location=0) in vec2 aPos;
+layout (location=1) in vec2 aTexCoords;
+
+out vec2 TexCoords;
+
+void main()
+{
+	gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+	TexCoords = aTexCoords;
+})";
+
+        std::string fragmentSource = R"(#version 330 core
+out vec4 FragColor;
+  
+in vec2 TexCoords;
+
+uniform sampler2D screenTexture;
+
+void main()
+{ 
+    FragColor = texture(screenTexture, TexCoords);
+})";
+
+        m_screenSpaceShader = std::make_shared<Shader>(true, vertexSource.c_str(), fragmentSource.c_str());
 
         m_viewport.SetWidth(renderTargetWidth);
         m_viewport.SetHeight(renderTargetHeight);
