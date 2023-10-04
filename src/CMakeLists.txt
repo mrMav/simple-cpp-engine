@@ -4,12 +4,17 @@ set(HEADERS
     Typedefs.h
     Internal.h
     Engine.h
+    Singleton.h
+    StateManager.h
+    GameState.h
     Game.h
     Timer.h    
 )
 
 set(SOURCE
     ${SOURCE}
+    StateManager.cpp
+    GameState.cpp
     Game.cpp
     Timer.cpp
 )

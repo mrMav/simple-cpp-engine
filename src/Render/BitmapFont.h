@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OpenGL/Texture2D.h"
+#include "glm/glm.hpp"
 
 namespace Engine
 {
@@ -25,6 +26,7 @@ namespace Engine
 
         Texture2D* GetTexture() { return m_fontData; }
         CharData GetCharData(char c);
+        glm::vec2 GetStringSize(std::string str) const;
 
         int CharWidth() const { return m_charWidth; };
         int CharHeight() const { return m_charHeight; };

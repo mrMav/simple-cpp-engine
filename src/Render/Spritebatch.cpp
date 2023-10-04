@@ -44,6 +44,7 @@ namespace Engine
 		m_Shader = shader;
 		m_Camera = camera;
 		m_Tint = tint;
+		m_Depth = depth;
 		m_DrawCustomView = customView;
 
 		m_BeginCalled = true;
@@ -58,6 +59,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 
 		m_Tint = glm::vec4(1);
+		m_Depth = 0;
 		m_DrawCustomView = false;
 	}
 
@@ -73,7 +75,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y)
 	{
 
 		FlushIfNeeded();
@@ -81,12 +83,13 @@ namespace Engine
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y);
+		item->Depth = m_Depth;
 
 		m_Stats.ItemCount++;
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, float angle, float originX, float originY)
 	{
 
 		FlushIfNeeded();
@@ -100,7 +103,7 @@ namespace Engine
 	}
 
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect)
 	{
 		FlushIfNeeded();
 
@@ -112,7 +115,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX, float originY)
 	{
 		FlushIfNeeded();
 
@@ -124,11 +127,11 @@ namespace Engine
 
 	}
 
-	void Spritebatch::DrawString(BitmapFont* bitmapfont, int32_t x, int32_t y, const char* text)
+	void Spritebatch::DrawString(BitmapFont* bitmapfont, float x, float y, const char* text)
 	{
 		int count = 0;
-		int add_y = 0;
-		int reset_x = 0;
+		float add_y = 0;
+		float reset_x = 0;
 		char c = text[count];
 
 
@@ -165,6 +168,9 @@ namespace Engine
 
 	void Spritebatch::Flush()
 	{
+		//_ENGINE_PASS_OR_RETURN_MSG(m_BatchItemIndex > 0, "SpriteBatch", "No items to flush.")
+		_ENGINE_PASS_OR_RETURN(m_BatchItemIndex > 0)
+		
 
 		m_Stats.Flushs++;
 

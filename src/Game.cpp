@@ -27,9 +27,8 @@ namespace Engine
 
     Game::~Game()
     {
-        delete[] m_screenQuadVertices;
-        delete[] m_screenQuadIndices;
-
+        // shutdown all systems
+        Shutdown();
     }
 
     void Game::Run()
@@ -49,11 +48,12 @@ namespace Engine
             double newTime = glfwGetTime();
             delta = newTime - time;
             time = newTime;
-
-            Update(delta);
+            
+            Input::PreUpdate();
+            StateManager::GetSingleton().Update(delta);
 
             PreRender();
-            Render(delta);  // calls the specific game render function.
+            StateManager::GetSingleton().Render(delta);            
             PostRender();
 
             // TODO: be moved to rendering class
@@ -66,9 +66,6 @@ namespace Engine
             glfwPollEvents();
 
         }
-
-        // shutdown all systems
-        Shutdown();
 
     }
 
@@ -161,7 +158,6 @@ namespace Engine
 
         m_screenQuad = std::make_shared<VertexArray>(&VertexPositionTexture::Attributes);
         
-        m_screenQuadVertices = new VertexPositionTexture[4];
         m_screenQuadVertices[0].Position = glm::vec3(-1,  1, 0);  // top left
         m_screenQuadVertices[1].Position = glm::vec3( 1,  1, 0);  // top right
         m_screenQuadVertices[2].Position = glm::vec3( 1, -1, 0);  // bottom right
@@ -174,7 +170,6 @@ namespace Engine
 
         m_screenQuad->SetVertices(m_screenQuadVertices, 4 * sizeof(VertexPositionTexture));
 
-        m_screenQuadIndices = new uint16_t[6];
         m_screenQuadIndices[0] = 0;
         m_screenQuadIndices[1] = 1;
         m_screenQuadIndices[2] = 2;
@@ -186,17 +181,38 @@ namespace Engine
         m_screenQuad->SetIndices(m_screenQuadIndices, 6);
 
         m_renderTarget = std::make_shared<FrameBuffer>(renderTargetWidth, renderTargetHeight);
-        m_screenSpaceShader = std::make_shared<Shader>("Resources/normalized_vertex.vert", "Resources/sample_fragment.frag");
+
+        std::string vertexSource = R"(#version 330 core
+
+layout (location=0) in vec2 aPos;
+layout (location=1) in vec2 aTexCoords;
+
+out vec2 TexCoords;
+
+void main()
+{
+	gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+	TexCoords = aTexCoords;
+})";
+
+        std::string fragmentSource = R"(#version 330 core
+out vec4 FragColor;
+  
+in vec2 TexCoords;
+
+uniform sampler2D screenTexture;
+
+void main()
+{ 
+    FragColor = texture(screenTexture, TexCoords);
+})";
+
+        m_screenSpaceShader = std::make_shared<Shader>(true, vertexSource.c_str(), fragmentSource.c_str());
 
         m_viewport.SetWidth(renderTargetWidth);
         m_viewport.SetHeight(renderTargetHeight);
         m_viewport.Set();
         m_renderTarget->Bind();
-
-    }
-
-    void Game::Update(float delta)
-    {
 
     }
 
@@ -206,7 +222,9 @@ namespace Engine
         {
             glViewport(0, 0, renderTargetWidth, renderTargetHeight);
             m_renderTarget->Bind();
-            glEnable(GL_DEPTH_TEST);
+
+            // I think becasue we mainly use an ortho camera, the z value is discarded, thus, no depth.
+            //glEnable(GL_DEPTH_TEST);
         }
 
     }
@@ -218,7 +236,7 @@ namespace Engine
             // draw the screen quad with the rendered framebuffer
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, m_windowWidth, m_windowHeight);
-            glDisable(GL_DEPTH_TEST);
+            //glDisable(GL_DEPTH_TEST);
             glClearColor(0.8, 0.8, 0.8, 1);
             glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
 
@@ -229,19 +247,20 @@ namespace Engine
         }
     }
 
-    void Game::Render(float delta)
-    {
-        
-    }
-
     void Game::Shutdown()
     {
+
+        StateManager::GetSingleton().Shutdown();
+
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 
         glfwDestroyWindow(m_windowHandle);
         glfwTerminate();
+
+        _ENGINE_LOG("Game", "Shutdown.")
+
     }
 
 
