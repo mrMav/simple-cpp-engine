@@ -27,6 +27,7 @@
 #include "Utils/Rectangle.h"
 
 #include "Systems/FrameAnimation.h"
+#include "Systems/TileSet.h"
 
 #include "Game.h"
 #include "Timer.h"

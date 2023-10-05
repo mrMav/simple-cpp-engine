@@ -50,6 +50,7 @@ namespace Engine
             delta = newTime - time;
             time = newTime;
             
+            Input::PreUpdate();
             Update(delta);
 
             PreRender();
