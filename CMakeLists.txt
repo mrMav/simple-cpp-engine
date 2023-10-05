@@ -30,6 +30,7 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC external/glfw/include
     PUBLIC external/glm
     PUBLIC external/imgui
+    PUBLIC external/json
     PUBLIC external
     PUBLIC src
 )
