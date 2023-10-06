@@ -44,6 +44,7 @@ namespace Engine
 		m_Shader = shader;
 		m_Camera = camera;
 		m_Tint = tint;
+		m_Depth = depth;
 		m_DrawCustomView = customView;
 
 		m_BeginCalled = true;
@@ -58,6 +59,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 
 		m_Tint = glm::vec4(1);
+		m_Depth = 0;
 		m_DrawCustomView = false;
 	}
 
@@ -81,6 +83,7 @@ namespace Engine
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y);
+		item->Depth = m_Depth;
 
 		m_Stats.ItemCount++;
 
@@ -165,6 +168,9 @@ namespace Engine
 
 	void Spritebatch::Flush()
 	{
+		//_ENGINE_PASS_OR_RETURN_MSG(m_BatchItemIndex > 0, "SpriteBatch", "No items to flush.")
+		_ENGINE_PASS_OR_RETURN(m_BatchItemIndex > 0)
+		
 
 		m_Stats.Flushs++;
 
