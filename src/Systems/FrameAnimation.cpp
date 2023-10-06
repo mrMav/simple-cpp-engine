@@ -2,18 +2,17 @@
 
 namespace Engine
 {
-    FrameAnimation::FrameAnimation(Ref<Texture2D> ptexture, const Rectangle<int>* pframes, int pframeCount)
+    FrameAnimation::FrameAnimation(Ref<Texture2D> ptexture, const Rectangle<int>* pframes, int pframeCount, int fps)
         : m_Texture(ptexture), m_Frames(pframes), m_FrameCount(pframeCount)
     {
         currentFramePtr = m_Frames;
+        SetFps(fps);
     }
 
     void FrameAnimation::SetFps(uint32_t fps)
     {
         m_Fps = fps;
-        m_FrameTime = 1.0 / fps;
-        std::string log = std::string("Set frame time to ") + std::to_string(m_FrameTime);
-        _ENGINE_LOG("FrameAnimation", log);
+        m_FrameTime = 1.0 / fps;        
     };
 
     const Rectangle<int>*  FrameAnimation::GetCurrentFrame() const

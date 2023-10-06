@@ -8,12 +8,12 @@ namespace Engine
     {
         public:
         FrameAnimation() { };
-        FrameAnimation(Ref<Texture2D> ptexture, const Rectangle<int>* pframes, int pframeCount);
+        FrameAnimation(Ref<Texture2D> ptexture, const Rectangle<int>* pframes, int pframeCount, int fps = 6);
         ~FrameAnimation() { };
 
         int currentFrame = 0;
         const Rectangle<int>* currentFramePtr = nullptr;
-        bool loop = false;
+        bool loop = true;
 
         void SetFps(uint32_t fps);
         void Update(float delta);
