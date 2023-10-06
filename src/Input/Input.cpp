@@ -116,7 +116,6 @@ namespace Engine
 		std::ifstream file("gamepad_mappings.txt");
 		if(file.good())
 		{
-			_ENGINE_LOG("INPUT", "Found custom gamepad mappings.")
 
 			std::stringstream buffer;
 			buffer << file.rdbuf();
@@ -127,7 +126,7 @@ namespace Engine
 				_ENGINE_LOG("INPUT", "Could not set custom gamepad mappings.")
 			} else
 			{
-				_ENGINE_LOG("INPUT", "Updated custom gamepad mappings! " + std::string(buffer.str().c_str()))
+				_ENGINE_LOG("INPUT", "Updated custom gamepad mappings!")
 			}
 			
 		}

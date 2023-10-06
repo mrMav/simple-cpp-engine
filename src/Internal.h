@@ -3,11 +3,12 @@
 #include <iostream>
 #include "Typedefs.h"
 
-#define _ENGINE_PASS_OR_RETURN(x) if (!(x)) { return; } else {};
-#define _ENGINE_FAIL_WITH_MSG(x, message)	\
-if (!(x))                          \
+#define _ENGINE_FAIL_WITH_MSG(CONDITION, MESSAGE)	\
+if (!(CONDITION))                          \
 {                                  \
-std::cout << message << std::endl; \
+std::cout << MESSAGE << std::endl; \
 exit(EXIT_FAILURE);                \
 } else {};
 #define _ENGINE_LOG(SYSTEM, MESSAGE) std::cout << SYSTEM << ":: " << MESSAGE << std::endl;
+#define _ENGINE_PASS_OR_RETURN_MSG(CONDITION, SYSTEM, MESSAGE) if (!(CONDITION)) { return; } else { _ENGINE_LOG(SYSTEM, MESSAGE) };
+#define _ENGINE_PASS_OR_RETURN(CONDITION) if (!(CONDITION)) { return; } else {};

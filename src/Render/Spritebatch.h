@@ -91,6 +91,7 @@ namespace Engine
 		Camera2D* m_Camera = nullptr;
 		glm::vec4 m_Tint = glm::vec4(1);
 		glm::mat4 m_CustomView = glm::mat4(1);
+		uint16_t m_Depth = 0;
 		bool m_DrawCustomView = false;
 
 		VertexArray* m_VertexArray = nullptr;

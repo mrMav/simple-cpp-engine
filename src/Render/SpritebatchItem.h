@@ -20,83 +20,85 @@ namespace Engine
 
 		Texture2D* texture = nullptr;
 
-		void Set(int32_t x, int32_t y, int16_t depth = 0)
+		uint16_t Depth = 0;
+
+		void Set(int32_t x, int32_t y)
 		{
-			vertexTL.Position = vec3(x, y, depth); // base depth of 0
+			vertexTL.Position = vec3(x, y, Depth); // base Depth of 0
 			vertexTL.Color = vec3(1);              // white
 			vertexTL.Texture = vec2(0, 0);
 
-			vertexTR.Position = vec3(x + texture->GetWidth(), y, depth);
+			vertexTR.Position = vec3(x + texture->GetWidth(), y, Depth);
 			vertexTR.Color = vec3(1);
 			vertexTR.Texture = vec2(1, 0);
 
-			vertexBL.Position = vec3(x, y + texture->GetHeight(), depth);
+			vertexBL.Position = vec3(x, y + texture->GetHeight(), Depth);
 			vertexBL.Color = vec3(1);
 			vertexBL.Texture = vec2(0, 1);
 
-			vertexBR.Position = vec3(x + texture->GetWidth(), y + texture->GetHeight(), depth);
+			vertexBR.Position = vec3(x + texture->GetWidth(), y + texture->GetHeight(), Depth);
 			vertexBR.Color = vec3(1);
 			vertexBR.Texture = vec2(1, 1);
 
 		}
 
-		void Set(int32_t x, int32_t y, float angle, int16_t depth = 0)
+		void Set(int32_t x, int32_t y, float angle)
 		{
 
-			Set(x, y, x, y, angle, depth);
+			Set(x, y, x, y, angle);
 
 			vec2 test = rotate(vec2(10, 0), radians(90.0f));
 
 		}
 
-		void Set(int32_t x, int32_t y, float originX, float originY, float angle, int16_t depth = 0)
+		void Set(int32_t x, int32_t y, float originX, float originY, float angle)
 		{
 			
 			vec2 origin = OriginToWorld(x, y, originX, originY);
 
-			vertexTL.Position = vec3(RotateVertice(vec2(x, y), angle, origin), depth);
+			vertexTL.Position = vec3(RotateVertice(vec2(x, y), angle, origin), Depth);
 			vertexTL.Color = vec3(1);
 			vertexTL.Texture = vec2(0, 0);
 
-			vertexTR.Position = vec3(RotateVertice(vec2(x + texture->GetWidth(), y), angle, origin), depth);
+			vertexTR.Position = vec3(RotateVertice(vec2(x + texture->GetWidth(), y), angle, origin), Depth);
 			vertexTR.Color = vec3(1);
 			vertexTR.Texture = vec2(1, 0);
 
-			vertexBL.Position = vec3(RotateVertice(vec2(x, y + texture->GetHeight()), angle, origin), depth);
+			vertexBL.Position = vec3(RotateVertice(vec2(x, y + texture->GetHeight()), angle, origin), Depth);
 			vertexBL.Color = vec3(1);
 			vertexBL.Texture = vec2(0, 1);
 
-			vertexBR.Position = vec3(RotateVertice(vec2(x + texture->GetWidth(), y + texture->GetHeight()), angle, origin), depth);
+			vertexBR.Position = vec3(RotateVertice(vec2(x + texture->GetWidth(), y + texture->GetHeight()), angle, origin), Depth);
 			vertexBR.Color = vec3(1);
 			vertexBR.Texture = vec2(1, 1);
 
 		}
 
-		void Set(int32_t x, int32_t y, Rectangle<int> clipRect, int16_t depth = 0)
+		void Set(int32_t x, int32_t y, Rectangle<int> clipRect)
 		{
 
 			glm::vec2 textureTL = GetTextureCoord(texture, clipRect.X, clipRect.Y);
 			glm::vec2 textureBR = GetTextureCoord(texture, clipRect.X + clipRect.Width(), clipRect.Y + clipRect.Height());
 
-			vertexTL.Position = vec3(x, y, depth);
+			vertexTL.Position = vec3(x, y, Depth);
 			vertexTL.Color = vec3(1);
 			vertexTL.Texture = textureTL;
 
-			vertexTR.Position = vec3(x + clipRect.Width(), y, depth);
+			vertexTR.Position = vec3(x + clipRect.Width(), y, Depth);
 			vertexTR.Color = vec3(1);
 			vertexTR.Texture = vec2(textureBR.x, textureTL.y);
 
-			vertexBL.Position = vec3(x, y + clipRect.Height(), depth);
+			vertexBL.Position = vec3(x, y + clipRect.Height(), Depth);
 			vertexBL.Color = vec3(1);
 			vertexBL.Texture = vec2(textureTL.x, textureBR.y);
 
-			vertexBR.Position = vec3(x + clipRect.Width(), y + clipRect.Height(), depth);
+			vertexBR.Position = vec3(x + clipRect.Width(), y + clipRect.Height(), Depth);
 			vertexBR.Color = vec3(1);
 			vertexBR.Texture = textureBR;
 
 		}
 
-		void Set(int32_t x, int32_t y, Rectangle<int> clipRect, float originX, float originY, float angle, int16_t depth = 0)
+		void Set(int32_t x, int32_t y, Rectangle<int> clipRect, float originX, float originY, float angle)
 		{
 
 			glm::vec2 textureTL = GetTextureCoord(texture, clipRect.X, clipRect.Y);
@@ -104,19 +106,19 @@ namespace Engine
 
 			vec2 origin = OriginToWorld(x, y, originX, originY, clipRect);
 
-			vertexTL.Position = vec3(RotateVertice(vec2(x, y), angle, origin), depth);
+			vertexTL.Position = vec3(RotateVertice(vec2(x, y), angle, origin), Depth);
 			vertexTL.Color = vec3(1);
 			vertexTL.Texture = textureTL;
 
-			vertexTR.Position = vec3(RotateVertice(vec2(x + clipRect.Width(), y), angle, origin), depth);
+			vertexTR.Position = vec3(RotateVertice(vec2(x + clipRect.Width(), y), angle, origin), Depth);
 			vertexTR.Color = vec3(1);
 			vertexTR.Texture = vec2(textureBR.x, textureTL.y);
 
-			vertexBL.Position = vec3(RotateVertice(vec2(x, y + clipRect.Height()), angle, origin), depth);
+			vertexBL.Position = vec3(RotateVertice(vec2(x, y + clipRect.Height()), angle, origin), Depth);
 			vertexBL.Color = vec3(1);
 			vertexBL.Texture = vec2(textureTL.x, textureBR.y);
 
-			vertexBR.Position = vec3(RotateVertice(vec2(x + clipRect.Width(), y + clipRect.Height()), angle, origin), depth);
+			vertexBR.Position = vec3(RotateVertice(vec2(x + clipRect.Width(), y + clipRect.Height()), angle, origin), Depth);
 			vertexBR.Color = vec3(1);
 			vertexBR.Texture = textureBR;
 

@@ -49,7 +49,8 @@ namespace Engine
             double newTime = glfwGetTime();
             delta = newTime - time;
             time = newTime;
-
+            
+            Input::PreUpdate();
             Update(delta);
 
             PreRender();
@@ -186,7 +187,33 @@ namespace Engine
         m_screenQuad->SetIndices(m_screenQuadIndices, 6);
 
         m_renderTarget = std::make_shared<FrameBuffer>(renderTargetWidth, renderTargetHeight);
-        m_screenSpaceShader = std::make_shared<Shader>("Resources/normalized_vertex.vert", "Resources/sample_fragment.frag");
+
+        std::string vertexSource = R"(#version 330 core
+
+layout (location=0) in vec2 aPos;
+layout (location=1) in vec2 aTexCoords;
+
+out vec2 TexCoords;
+
+void main()
+{
+	gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);
+	TexCoords = aTexCoords;
+})";
+
+        std::string fragmentSource = R"(#version 330 core
+out vec4 FragColor;
+  
+in vec2 TexCoords;
+
+uniform sampler2D screenTexture;
+
+void main()
+{ 
+    FragColor = texture(screenTexture, TexCoords);
+})";
+
+        m_screenSpaceShader = std::make_shared<Shader>(true, vertexSource.c_str(), fragmentSource.c_str());
 
         m_viewport.SetWidth(renderTargetWidth);
         m_viewport.SetHeight(renderTargetHeight);
@@ -206,7 +233,9 @@ namespace Engine
         {
             glViewport(0, 0, renderTargetWidth, renderTargetHeight);
             m_renderTarget->Bind();
-            glEnable(GL_DEPTH_TEST);
+
+            // I think becasue we mainly use an ortho camera, the z value is discarded, thus, no depth.
+            //glEnable(GL_DEPTH_TEST);
         }
 
     }
@@ -218,7 +247,7 @@ namespace Engine
             // draw the screen quad with the rendered framebuffer
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, m_windowWidth, m_windowHeight);
-            glDisable(GL_DEPTH_TEST);
+            //glDisable(GL_DEPTH_TEST);
             glClearColor(0.8, 0.8, 0.8, 1);
             glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
 
