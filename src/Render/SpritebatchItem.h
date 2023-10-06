@@ -22,7 +22,7 @@ namespace Engine
 
 		uint16_t Depth = 0;
 
-		void Set(int32_t x, int32_t y)
+		void Set(float x, float y)
 		{
 			vertexTL.Position = vec3(x, y, Depth); // base Depth of 0
 			vertexTL.Color = vec3(1);              // white
@@ -42,7 +42,7 @@ namespace Engine
 
 		}
 
-		void Set(int32_t x, int32_t y, float angle)
+		void Set(float x, float y, float angle)
 		{
 
 			Set(x, y, x, y, angle);
@@ -51,7 +51,7 @@ namespace Engine
 
 		}
 
-		void Set(int32_t x, int32_t y, float originX, float originY, float angle)
+		void Set(float x, float y, float originX, float originY, float angle)
 		{
 			
 			vec2 origin = OriginToWorld(x, y, originX, originY);
@@ -74,7 +74,7 @@ namespace Engine
 
 		}
 
-		void Set(int32_t x, int32_t y, Rectangle<int> clipRect)
+		void Set(float x, float y, Rectangle<int> clipRect)
 		{
 
 			glm::vec2 textureTL = GetTextureCoord(texture, clipRect.X, clipRect.Y);
@@ -98,7 +98,7 @@ namespace Engine
 
 		}
 
-		void Set(int32_t x, int32_t y, Rectangle<int> clipRect, float originX, float originY, float angle)
+		void Set(float x, float y, Rectangle<int> clipRect, float originX, float originY, float angle)
 		{
 
 			glm::vec2 textureTL = GetTextureCoord(texture, clipRect.X, clipRect.Y);
@@ -148,7 +148,7 @@ namespace Engine
 		/// <param name="oX">The origin X value</param>
 		/// <param name="oY">The origin Y value</param>
 		/// <returns>A vec2 containing the calculated position in world coordinates.</returns>
-		vec2 OriginToWorld(int32_t x, int32_t y, float oX, float oY)
+		vec2 OriginToWorld(float x, float y, float oX, float oY)
 		{
 			vec2 result;
 
@@ -166,7 +166,7 @@ namespace Engine
 		/// <param name="oX">The origin X value</param>
 		/// <param name="oY">The origin Y value</param>
 		/// <returns>A vec2 containing the calculated position in world coordinates.</returns>
-		vec2 OriginToWorld(int32_t x, int32_t y, float oX, float oY, Rectangle<int> &clipRect)
+		vec2 OriginToWorld(float x, float y, float oX, float oY, Rectangle<int> &clipRect)
 		{
 			vec2 result;
 
