@@ -75,7 +75,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y)
 	{
 
 		FlushIfNeeded();
@@ -89,7 +89,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, float angle, float originX, float originY)
 	{
 
 		FlushIfNeeded();
@@ -103,7 +103,7 @@ namespace Engine
 	}
 
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect)
 	{
 		FlushIfNeeded();
 
@@ -115,7 +115,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX, float originY)
 	{
 		FlushIfNeeded();
 

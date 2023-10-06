@@ -70,10 +70,10 @@ namespace Engine
 		void SetCustomView(glm::mat4 viewTransform) { m_CustomView = viewTransform; };
 		void End();
 
-		void Draw(Texture2D* texture, int32_t x, int32_t y);
-		void Draw(Texture2D* texture, int32_t x, int32_t y, float angle, float originX = 0.5f, float originY = 0.5f);
-		void Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect);
-		void Draw(Texture2D* texture, int32_t x, int32_t y, Rectangle<int> clipRect, float angle, float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, float x, float y);
+		void Draw(Texture2D* texture, float x, float y, float angle, float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect);
+		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX = 0.5f, float originY = 0.5f);
  
 		void DrawString(BitmapFont* bitmapfont, int32_t x, int32_t y, const char* text);
 
