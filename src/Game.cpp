@@ -233,7 +233,9 @@ void main()
         {
             glViewport(0, 0, renderTargetWidth, renderTargetHeight);
             m_renderTarget->Bind();
-            glEnable(GL_DEPTH_TEST);
+
+            // I think becasue we mainly use an ortho camera, the z value is discarded, thus, no depth.
+            //glEnable(GL_DEPTH_TEST);
         }
 
     }
@@ -245,7 +247,7 @@ void main()
             // draw the screen quad with the rendered framebuffer
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, m_windowWidth, m_windowHeight);
-            glDisable(GL_DEPTH_TEST);
+            //glDisable(GL_DEPTH_TEST);
             glClearColor(0.8, 0.8, 0.8, 1);
             glClear(GL_COLOR_BUFFER_BIT); // only need to clear the color, since we do not perform depth or stencil here
 
