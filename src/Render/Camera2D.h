@@ -29,6 +29,7 @@ namespace Engine
 
 		glm::mat4 GetViewTransform() const { return m_ViewTransform; }
 		glm::mat4 GetProjectionTransform() const { return m_ProjectionTransform; }
+		Viewport& GetViewport() const { return m_Viewport; };
 
 		void SetViewport(Viewport& v);
 		
