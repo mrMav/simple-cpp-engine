@@ -75,7 +75,7 @@ namespace Engine
 		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect);
 		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX = 0.5f, float originY = 0.5f);
  
-		void DrawString(BitmapFont* bitmapfont, int32_t x, int32_t y, const char* text);
+		void DrawString(BitmapFont* bitmapfont, float x, float y, const char* text);
 
 		const BatchStats& GetStats() const { return m_Stats;  }
 

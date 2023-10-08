@@ -127,11 +127,11 @@ namespace Engine
 
 	}
 
-	void Spritebatch::DrawString(BitmapFont* bitmapfont, int32_t x, int32_t y, const char* text)
+	void Spritebatch::DrawString(BitmapFont* bitmapfont, float x, float y, const char* text)
 	{
 		int count = 0;
-		int add_y = 0;
-		int reset_x = 0;
+		float add_y = 0;
+		float reset_x = 0;
 		char c = text[count];
 
 
