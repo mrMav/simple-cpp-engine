@@ -25,14 +25,20 @@ namespace Engine
         return m_Texture;
     }
 
-    void FrameAnimation::Play()
+    void FrameAnimation::Play(bool ploop)
     {
         m_ShouldUpdate = true;
         currentFrame = 0;
         currentFramePtr = m_Frames;
+        loop = ploop;
 
         m_AccumulatedTime = 0;
         m_NextFrameTime = m_FrameTime;
+    }
+
+    bool FrameAnimation::IsPlaying() const
+    {
+        return m_ShouldUpdate;
     }
 
     void FrameAnimation::Update(float delta)
@@ -58,7 +64,8 @@ namespace Engine
                     {
                         // animation finished
                         m_ShouldUpdate = false;
-                        currentFramePtr += currentFrame;
+                        currentFrame = 0;
+                        currentFramePtr = m_Frames;
                     }
                 }
 

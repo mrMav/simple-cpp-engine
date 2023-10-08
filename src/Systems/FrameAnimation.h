@@ -17,9 +17,10 @@ namespace Engine
 
         void SetFps(uint32_t fps);
         void Update(float delta);
-        void Play();
+        void Play(bool ploop = false);
         const Rectangle<int>* GetCurrentFrame() const;
         Ref<Texture2D> GetTexture() const;
+        bool IsPlaying() const;
 
         private:
         Ref<Texture2D> m_Texture;
