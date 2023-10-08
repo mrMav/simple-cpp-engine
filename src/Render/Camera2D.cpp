@@ -69,4 +69,10 @@ namespace Engine
 	{
 		return (m_ViewTransform * glm::vec4(pos, 0, 1));
 	}
+
+	glm::vec2 Camera2D::GetCameraDisplaySize() const
+	{
+		return glm::vec2(GetViewport().Width() / Zoom, GetViewport().Height() / Zoom);
+	}
+
 }
