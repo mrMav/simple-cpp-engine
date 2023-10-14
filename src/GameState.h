@@ -6,6 +6,8 @@
 namespace Engine
 {
 
+    class Game;
+
     class GameState
     {
 
@@ -21,6 +23,7 @@ namespace Engine
         virtual ~GameState() { };
 
         const std::string& GetName() const { return Name; };
+        void SetName(std::string name) { Name = name; };
         Game* GetGame() { return _Game; };
 
         void virtual Init() { };

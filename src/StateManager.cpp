@@ -2,6 +2,7 @@
 
 namespace Engine
 {
+
     StateManager stateManager;
 
     StateManager::StateManager()
@@ -14,7 +15,7 @@ namespace Engine
         
     }
 
-    void StateManager::AddState(std::string name, Ref<GameState> state)
+    void StateManager::AddState(std::string name, GameState* state)
     {
         auto it = _States.find(name);
 
@@ -25,8 +26,9 @@ namespace Engine
             return;
         } else
         {
+            state->SetName(name);
+            _States.insert({name, state});            
             _ENGINE_LOG("StateManager", "Added state with key: " << name)
-            _States.insert({name, state});
         }
     }
 
@@ -38,29 +40,36 @@ namespace Engine
             return;
         }
 
-        if(_CurrentState != nullptr)
-        {
-            _CurrentState->Shutdown();
-        }
-
         auto it = _States.find(name);
 
         if(it != _States.end())
         {
             // state exists
-            _CurrentState = it->second;
+            _QueuedState = it->second;
 
-            // init here or on next update loop?
-            _CurrentState->Init();
+        } else
+        {
+            _ENGINE_LOG("StateManager", "Cannot change states because state doesn't exists: " << name)
         }
 
     }
 
     void StateManager::Update(float delta)
     {
-        if(_CurrentState == nullptr) return;
+        if(_QueuedState != nullptr)
+        {
+            if(_CurrentState != nullptr)
+            {
+                _CurrentState->Shutdown();
+            }
+
+            _CurrentState = _QueuedState;
+            _CurrentState->Init();
+            _QueuedState = nullptr;
+        }
 
         _CurrentState->Update(delta);
+
     }
 
     void StateManager::Render(float delta)
@@ -74,7 +83,13 @@ namespace Engine
     {
         if(_CurrentState == nullptr) return;
 
-        _CurrentState->Shutdown();
+        // free memory
+        for(auto& state : _States)
+        {   
+            _ENGINE_LOG("StateManager", "Deleting state with key: " << state.second->GetName())
+            delete state.second;
+        }
+
     }
 
 }

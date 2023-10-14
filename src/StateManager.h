@@ -13,22 +13,23 @@ namespace Engine
     {
         private:
 
-            std::map<std::string, Ref<GameState>> _States;
+            std::map<std::string, GameState*> _States;
 
             /// @brief A vector that should act as a stack, to track what states are in a preserved state.
             /// The preserved state serves the purposed of changing state but keeping the last change state
             /// memory intact. An example could be changing from a playing state to the options menu state.
             /// When the options state is closed, we want to restore the playing state with the state it had.
-            std::vector<Ref<GameState>> _PreservedStack;
+            std::vector<GameState*> _PreservedStack;
 
-            Ref<GameState>  _CurrentState;
+            GameState* _CurrentState;
+            GameState* _QueuedState = nullptr;
 
         public:
 
             StateManager();
             ~StateManager();
 
-            void AddState(std::string name, Ref<GameState> state);
+            void AddState(std::string name, GameState* state);
 
             /// @brief Changes from one state to another.
             /// @param name 

@@ -11,10 +11,10 @@
 #include <GLFW/glfw3.h>
 
 #include "Internal.h"
+#include "StateManager.h"
 
 namespace Engine
 {
-
     class Game
     {
         public:
@@ -58,7 +58,7 @@ namespace Engine
             std::string m_windowTitle;
 
             Viewport m_viewport;
-
+            
     };
 
 }

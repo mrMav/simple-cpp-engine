@@ -3,7 +3,6 @@
 #include <GLFW/glfw3.h>
 
 #include "Game.h"
-#include "Systems/StateManager.h"
 #include "OpenGL/GLUtils.h"
 #include "Input/Input.h"
 
