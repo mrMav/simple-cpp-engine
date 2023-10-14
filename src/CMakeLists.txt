@@ -6,6 +6,7 @@ set(HEADERS
     Engine.h
     Game.h
     Timer.h    
+    Singleton.h
 )
 
 set(SOURCE

@@ -26,15 +26,6 @@ namespace Engine
 		m_Origin = glm::vec3(m_Viewport.Width() / 2.0f, m_Viewport.Height() / 2.0f, 0.0f);
 	}
 
-	void Camera2D::SetViewport(Viewport& v)
-	{
-		m_Viewport = v;
-		UpdateOrigin();
-		UpdateProjection();
-
-	}
-
-
 	void Camera2D::Update(float gameTime) //TODO: make delta time a struct with access to ellpased time, etc
 	{
 		// updates the view matrix		

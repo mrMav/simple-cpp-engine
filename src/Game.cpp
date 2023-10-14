@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Game.h"
+#include "Systems/StateManager.h"
 #include "OpenGL/GLUtils.h"
 #include "Input/Input.h"
 
@@ -27,9 +28,7 @@ namespace Engine
 
     Game::~Game()
     {
-        delete[] m_screenQuadVertices;
-        delete[] m_screenQuadIndices;
-
+        
     }
 
     void Game::Run()
@@ -51,10 +50,10 @@ namespace Engine
             time = newTime;
             
             Input::PreUpdate();
-            Update(delta);
+            StateManager::GetSingleton().Update(delta);
 
             PreRender();
-            Render(delta);  // calls the specific game render function.
+            StateManager::GetSingleton().Render(delta);            
             PostRender();
 
             // TODO: be moved to rendering class
@@ -162,7 +161,6 @@ namespace Engine
 
         m_screenQuad = std::make_shared<VertexArray>(&VertexPositionTexture::Attributes);
         
-        m_screenQuadVertices = new VertexPositionTexture[4];
         m_screenQuadVertices[0].Position = glm::vec3(-1,  1, 0);  // top left
         m_screenQuadVertices[1].Position = glm::vec3( 1,  1, 0);  // top right
         m_screenQuadVertices[2].Position = glm::vec3( 1, -1, 0);  // bottom right
@@ -175,7 +173,6 @@ namespace Engine
 
         m_screenQuad->SetVertices(m_screenQuadVertices, 4 * sizeof(VertexPositionTexture));
 
-        m_screenQuadIndices = new uint16_t[6];
         m_screenQuadIndices[0] = 0;
         m_screenQuadIndices[1] = 1;
         m_screenQuadIndices[2] = 2;
@@ -222,11 +219,6 @@ void main()
 
     }
 
-    void Game::Update(float delta)
-    {
-
-    }
-
     void Game::PreRender()
     {
         if (useRenderTarget)
@@ -258,19 +250,22 @@ void main()
         }
     }
 
-    void Game::Render(float delta)
-    {
-        
-    }
-
     void Game::Shutdown()
     {
+
+        _ENGINE_LOG("Game", "Shuting down....")
+
+        StateManager::GetSingleton().Shutdown();
+
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
 
         glfwDestroyWindow(m_windowHandle);
         glfwTerminate();
+
+        _ENGINE_LOG("Game", "Shutdown.")
+
     }
 
 

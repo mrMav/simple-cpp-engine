@@ -64,6 +64,8 @@ namespace Engine
 			delete[] m_Indices;
 
 			m_VertexArray->Delete();
+
+			_ENGINE_LOG("Spritebatch", "Deleted.")
 		};
 
 		void Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth = 0, bool customView = false);

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "Typedefs.h"
+#include "Singleton.h"
 
 #define _ENGINE_FAIL_WITH_MSG(CONDITION, MESSAGE)	\
 if (!(CONDITION))                          \

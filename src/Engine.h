@@ -26,6 +26,7 @@
 #include "Utils/Utils.h"
 #include "Utils/Rectangle.h"
 
+#include "Systems/StateManager.h"
 #include "Systems/FrameAnimation.h"
 #include "Systems/TileSet.h"
 
