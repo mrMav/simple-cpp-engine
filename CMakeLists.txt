@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.22..3.26)
 
 set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_PREFIX_PATH "external/easy_profiler/lib/cmake/easy_profiler")
 
 project(simple-cpp-engine)
 
 # options
 option(BUILD_TESTS "Build the sample tests that show case the engine usage." ON)
+
+find_package(easy_profiler REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCE})
 
@@ -31,10 +34,11 @@ target_include_directories(${PROJECT_NAME}
     PUBLIC external/glm
     PUBLIC external/imgui
     PUBLIC external/json
+    PUBLIC external/easy_profiler/include
     PUBLIC external
     PUBLIC src
 )
 
 target_link_directories(${PROJECT_NAME} PRIVATE external/glfw/src PRIVATE external/imgui)
 
-target_link_libraries(${PROJECT_NAME} glfw imgui)
+target_link_libraries(${PROJECT_NAME} glfw imgui easy_profiler)
