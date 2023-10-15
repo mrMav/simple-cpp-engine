@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Internal.h"
+
 #include "OpenGL/Texture2D.h"
 #include "OpenGL/VertexArray.h"
 #include "OpenGL/Shader.h"
@@ -68,16 +70,16 @@ namespace Engine
 			_ENGINE_LOG("Spritebatch", "Deleted.")
 		};
 
-		void Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth = 0, bool customView = false);
+		void Begin(Shader* shader, Camera2D* camera, int16_t depth = 0, bool customView = false);
 		void SetCustomView(glm::mat4 viewTransform) { m_CustomView = viewTransform; };
 		void End();
 
-		void Draw(Texture2D* texture, float x, float y);
-		void Draw(Texture2D* texture, float x, float y, float angle, float originX = 0.5f, float originY = 0.5f);
-		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect);
-		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, float x, float y, glm::vec4 tint = glm::vec4(1));
+		void Draw(Texture2D* texture, float x, float y, float angle, glm::vec4 tint = glm::vec4(1), float originX = 0.5f, float originY = 0.5f);
+		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, glm::vec4 tint = glm::vec4(1));
+		void Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, glm::vec4 tint = glm::vec4(1), float originX = 0.5f, float originY = 0.5f);
  
-		void DrawString(BitmapFont* bitmapfont, float x, float y, const char* text);
+		void DrawString(BitmapFont* bitmapfont, float x, float y, const char* text, glm::vec4 tint = glm::vec4(1));
 
 		const BatchStats& GetStats() const { return m_Stats;  }
 
@@ -91,7 +93,6 @@ namespace Engine
 
 		Shader* m_Shader = nullptr;
 		Camera2D* m_Camera = nullptr;
-		glm::vec4 m_Tint = glm::vec4(1);
 		glm::mat4 m_CustomView = glm::mat4(1);
 		uint16_t m_Depth = 0;
 		bool m_DrawCustomView = false;

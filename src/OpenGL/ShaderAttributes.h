@@ -155,10 +155,10 @@ namespace Engine
         const static ShaderAttributes Attributes;
 
         glm::vec3 Position;
-        glm::vec3 Color;
+        glm::vec4 Color;
         glm::vec2 Texture;
 
-        VertexPositionColorTexture(glm::vec3 pos, glm::vec3 color, glm::vec2 texture)
+        VertexPositionColorTexture(glm::vec3 pos, glm::vec4 color, glm::vec2 texture)
             : Position(pos), Color(color), Texture(texture)
         {
 
@@ -167,7 +167,7 @@ namespace Engine
         VertexPositionColorTexture()
         {
             Position = glm::vec3(0);
-            Color    = glm::vec3(0);
+            Color    = glm::vec4(0);
             Texture  = glm::vec2(0);
         }
     };

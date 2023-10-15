@@ -34,7 +34,7 @@ namespace Engine
 		m_IndicesPtr = m_Indices;
 	}
 
-	void Spritebatch::Begin(Shader* shader, Camera2D* camera, glm::vec4 tint, int16_t depth, bool customView)
+	void Spritebatch::Begin(Shader* shader, Camera2D* camera, int16_t depth, bool customView)
 	{
 		_ENGINE_FAIL_WITH_MSG(!m_BeginCalled, "Spritebatch.Begin() was called, but Spritebatch.End() was never called!")
 
@@ -43,7 +43,6 @@ namespace Engine
 
 		m_Shader = shader;
 		m_Camera = camera;
-		m_Tint = tint;
 		m_Depth = depth;
 		m_DrawCustomView = customView;
 
@@ -58,7 +57,6 @@ namespace Engine
 		m_VerticesPtr = m_Vertices;
 		m_IndicesPtr = m_Indices;
 
-		m_Tint = glm::vec4(1);
 		m_Depth = 0;
 		m_DrawCustomView = false;
 	}
@@ -75,7 +73,7 @@ namespace Engine
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, float x, float y)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, glm::vec4 tint)
 	{
 
 		FlushIfNeeded();
@@ -84,12 +82,13 @@ namespace Engine
 		item->texture = texture;
 		item->Set(x, y);
 		item->Depth = m_Depth;
+		item->SetColor(tint);
 
 		m_Stats.ItemCount++;
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, float x, float y, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, float angle, glm::vec4 tint, float originX, float originY)
 	{
 
 		FlushIfNeeded();
@@ -97,37 +96,40 @@ namespace Engine
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y, originX, originY, angle);
+		item->SetColor(tint);
 
 		m_Stats.ItemCount++;
 
 	}
 
 
-	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, glm::vec4 tint)
 	{
 		FlushIfNeeded();
 
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y, clipRect);
+		item->SetColor(tint);
 
 		m_Stats.ItemCount++;
 
 	}
 
-	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, float originX, float originY)
+	void Spritebatch::Draw(Texture2D* texture, float x, float y, Rectangle<int> clipRect, float angle, glm::vec4 tint, float originX, float originY)
 	{
 		FlushIfNeeded();
 
 		SpritebatchItem* item = &(m_BatchItems[m_BatchItemIndex++]);
 		item->texture = texture;
 		item->Set(x, y, clipRect, originX, originY, angle);
+		item->SetColor(tint);
 
 		m_Stats.ItemCount++;
 
 	}
 
-	void Spritebatch::DrawString(BitmapFont* bitmapfont, float x, float y, const char* text)
+	void Spritebatch::DrawString(BitmapFont* bitmapfont, float x, float y, const char* text, glm::vec4 tint)
 	{
 		int count = 0;
 		float add_y = 0;
@@ -148,7 +150,7 @@ namespace Engine
 			CharData d = bitmapfont->GetCharData(c);
 			Rectangle<int> rect = { d.x, d.y, d.w, d.h };
 
-			Draw(bitmapfont->GetTexture(), x + reset_x * d.w, y + add_y, rect);
+			Draw(bitmapfont->GetTexture(), x + reset_x * d.w, y + add_y, rect, tint);
 			
 			reset_x++;
 			c = text[++count];
@@ -215,7 +217,6 @@ namespace Engine
 		else
 			m_Shader->setMat4("uView", m_Camera->GetViewTransform());
 		m_Shader->setMat4("uProjection", m_Camera->GetProjectionTransform());
-		m_Shader->setVec4("uColor", m_Tint);
 
 		// calculate how many vertices we are drawing
 		uint32_t vertCount = m_VerticesPtr - m_Vertices;
