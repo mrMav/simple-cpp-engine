@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cinttypes>
+#include <sstream>
 
 namespace Engine
 {
@@ -31,7 +32,7 @@ namespace Engine
 	class Rectangle
 	{
 	public:
-
+		Rectangle() { };
 		Rectangle(T x, T y, T w, T h)
 			: X(x), Y(y)
 		{

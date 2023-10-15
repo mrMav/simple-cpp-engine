@@ -32,4 +32,26 @@ namespace Engine
         return d;
     }
 
+    glm::vec2 BitmapFont::GetStringSize(std::string str) const
+    {
+        glm::vec2 size(0.0f);
+        
+        float width = 0;
+        for(int i = 0; i < str.size(); i++)
+        {
+            if(str[i] == '\n')
+            {
+                size.x = std::max(size.x, width);
+                size.y += CharHeight();
+                width = 0;
+            }else
+            {
+                width += CharWidth();
+            }
+        }
+        size.x = std::max(size.x, width);
+
+        return size;
+    }
+
 }

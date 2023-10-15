@@ -30,6 +30,11 @@ namespace Engine
 
 		Shader() { };
 
+		Shader(bool fromSource, const char* vertexSource, const char* fragmentSource)
+		{
+			CreateShader(vertexSource, fragmentSource);
+		}
+
 		// constructor
 		Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
 
@@ -72,8 +77,57 @@ namespace Engine
 
 			}
 
-			const char* vShaderCode = vertexCode.c_str();
-			const char* fShaderCode = fragmentCode.c_str();
+			CreateShader(vertexCode.c_str(), fragmentCode.c_str());
+
+		}
+
+		// active this shader
+		void use() {
+
+			glUseProgram(this->program);
+
+		}
+
+		void setInt(const std::string& name, const int value) {
+
+			glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+
+		}
+
+		void setFloat(const std::string& name, const float value) {
+
+			glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+
+		}
+
+		void setVec3(const std::string& name, const glm::vec3& value) const
+		{
+			glUniform3fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
+		}
+
+		void setVec3(const std::string& name, float x, float y, float z) const
+		{
+			glUniform3f(glGetUniformLocation(program, name.c_str()), x, y, z);
+		}
+
+		void setVec4(const std::string& name, const glm::vec4& value) const
+		{
+			glUniform4fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
+		}
+
+		void setMat4(const std::string& name, const glm::mat4& mat) const
+		{
+			glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+		}
+
+
+		private:
+		void CreateShader(const char* vertexSource, const char* fragmentSource)
+		{
+			using namespace std;
+
+			const char* vShaderCode = vertexSource;
+			const char* fShaderCode = fragmentSource;
 
 			// compile shaders
 			GLuint vertex, fragment;
@@ -124,47 +178,9 @@ namespace Engine
 
 			glDeleteShader(vertex);
 			glDeleteShader(fragment);
-
 		}
 
-		// active this shader
-		void use() {
 
-			glUseProgram(this->program);
-
-		}
-
-		void setInt(const std::string& name, const int value) {
-
-			glUniform1i(glGetUniformLocation(program, name.c_str()), value);
-
-		}
-
-		void setFloat(const std::string& name, const float value) {
-
-			glUniform1f(glGetUniformLocation(program, name.c_str()), value);
-
-		}
-
-		void setVec3(const std::string& name, const glm::vec3& value) const
-		{
-			glUniform3fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
-		}
-
-		void setVec3(const std::string& name, float x, float y, float z) const
-		{
-			glUniform3f(glGetUniformLocation(program, name.c_str()), x, y, z);
-		}
-
-		void setVec4(const std::string& name, const glm::vec4& value) const
-		{
-			glUniform4fv(glGetUniformLocation(program, name.c_str()), 1, &value[0]);
-		}
-
-		void setMat4(const std::string& name, const glm::mat4& mat) const
-		{
-			glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, &mat[0][0]);
-		}
 	};
 
 }

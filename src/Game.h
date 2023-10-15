@@ -1,14 +1,20 @@
 #pragma once
 
 #include <iostream>
+#include "OpenGL/IndexBuffer.h"
+#include "OpenGL/VertexArray.h"
+#include "OpenGL/FrameBuffer.h"
+#include "OpenGL/Shader.h"
+#include "Render/Viewport.h"
+
+// glfw to be included only after glad
 #include <GLFW/glfw3.h>
-#include <Engine.h>
 
 #include "Internal.h"
+#include "StateManager.h"
 
 namespace Engine
 {
-
     class Game
     {
         public:
@@ -18,9 +24,7 @@ namespace Engine
 
             void virtual Run();
             void virtual Load();
-            void virtual Update(float delta);
-            void virtual Render(float delta);
-            void Shutdown();
+            void virtual Shutdown();
 
             Viewport& GetViewport() { return m_viewport; }
             void SetRenderTarget();
@@ -30,6 +34,7 @@ namespace Engine
             uint32_t renderTargetHeight;
 
         private:
+            
             
             void Init();
             void PreRender();
@@ -43,8 +48,8 @@ namespace Engine
             // or RenderServer class type.
             // It will work for now.
             Ref<VertexArray> m_screenQuad;
-            VertexPositionTexture* m_screenQuadVertices;
-            uint16_t* m_screenQuadIndices;
+            VertexPositionTexture m_screenQuadVertices[4];
+            uint16_t m_screenQuadIndices[6];
 
             Ref<FrameBuffer> m_renderTarget;
             Ref<Shader> m_screenSpaceShader;
@@ -53,7 +58,7 @@ namespace Engine
             std::string m_windowTitle;
 
             Viewport m_viewport;
-
+            
     };
 
 }
