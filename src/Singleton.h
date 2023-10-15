@@ -1,4 +1,4 @@
-// as seen in game programming gems volume 1;
+// As seen in game programming gems volume 1;
 
 #include <cassert>
 

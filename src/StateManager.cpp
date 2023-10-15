@@ -2,7 +2,8 @@
 
 namespace Engine
 {
-
+    // the only purpose of this is to register
+    // the singleton mem adress.
     StateManager stateManager;
 
     StateManager::StateManager()

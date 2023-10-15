@@ -27,7 +27,8 @@ namespace Engine
 
     Game::~Game()
     {
-        
+        // shutdown all systems
+        Shutdown();
     }
 
     void Game::Run()
@@ -65,9 +66,6 @@ namespace Engine
             glfwPollEvents();
 
         }
-
-        // shutdown all systems
-        Shutdown();
 
     }
 
@@ -251,8 +249,6 @@ void main()
 
     void Game::Shutdown()
     {
-
-        _ENGINE_LOG("Game", "Shuting down....")
 
         StateManager::GetSingleton().Shutdown();
 

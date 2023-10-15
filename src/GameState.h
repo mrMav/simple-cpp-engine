@@ -1,30 +1,31 @@
 #pragma once
 
+#include <type_traits>
 #include "Internal.h"
-#include "Game.h"
 
 namespace Engine
-{
-
-    class Game;
-
+{   
     class GameState
     {
-
         private:
 
         std::string Name;
 
-        Game* _Game;
+        void* _Game;
 
         public:
 
-        GameState(Game* game) : _Game(game) { };
+        GameState(void* game) : _Game(game) { };
         virtual ~GameState() { };
 
         const std::string& GetName() const { return Name; };
         void SetName(std::string name) { Name = name; };
-        Game* GetGame() { return _Game; };
+
+        // I templated this function to be able to have this state
+        // manager work for everygame. Not proud of the void ptr to the
+        // game reference. But it works.
+        template <typename T>
+        T* GetGame() { return static_cast<T*>(_Game); };
 
         void virtual Init() { };
         void virtual Update(float delta) { };
